@@ -14,21 +14,22 @@ class Utilizador(models.Model):
     def __str__(self):
         return self.nome
     
-#Licenciatura
+#Licenciatura  
 class Licenciatura(models.Model):
     nome = models.CharField(max_length=150)
     sigla = models.CharField(max_length=20, blank=True)
+    codigo = models.IntegerField(null=True, blank=True)  # 👈 importante para API
     instituicao = models.CharField(max_length=150, blank=True)
     descricao = models.TextField(blank=True)
     duracao_anos = models.IntegerField(null=True, blank=True)
-
+    
     #Relacões
     utilizador = models.ForeignKey(Utilizador, on_delete=models.CASCADE)
-
+    
     #Como aparece no admin
     def __str__(self):
         return self.nome
-    
+
 
 #Docente
 #class auxiliar 
@@ -47,19 +48,19 @@ class Docente(models.Model):
 class UC(models.Model):
     nome = models.CharField(max_length=150)
     codigo = models.CharField(max_length=20)
-    ano = models.IntegerField()
-    semestre = models.IntegerField()
-    descricao = models.TextField()
-    imagem = models.ImageField(upload_to='ucs/',blank=True, null=True)
+    ano = models.IntegerField(null=True, blank=True)
+    semestre = models.IntegerField(null=True, blank=True)
+    descricao = models.TextField(blank=True, null=True)
+    ects = models.FloatField(null=True, blank=True)
+    imagem = models.ImageField(upload_to='ucs/', blank=True, null=True)
 
     #Relacões
-    licenciatura = models.ForeignKey(Licenciatura, on_delete=models.CASCADE)
-    docentes = models.ManyToManyField(Docente, blank=True)
+    licenciatura = models.ForeignKey('Licenciatura', on_delete=models.CASCADE, related_name="ucs")
+    docentes = models.ManyToManyField('Docente', blank=True) 
 
     #Como aparece no admin
     def __str__(self):
-        return self.nome
-    
+        return self.nome    
 
 #Tecnologia    
 class Tecnologia(models.Model):
@@ -144,20 +145,23 @@ class Repositorio(models.Model):
 #TFC
 class TFC(models.Model):
     titulo = models.CharField(max_length=200)
-    descricao = models.TextField()
-    ano = models.IntegerField()
-    classificacao = models.IntegerField()
-    pdf = models.URLField(blank=True)
-    imagem = models.ImageField(upload_to='tfc/',blank=True, null=True)
-    licenciatura = models.ForeignKey(Licenciatura, on_delete=models.CASCADE)
+    descricao = models.TextField(blank=True, null=True)
+    sumario = models.TextField(blank=True, null=True)
     
+    ano = models.IntegerField(null=True, blank=True)
+    classificacao = models.IntegerField(null=True, blank=True)
+
+    pdf = models.URLField(blank=True)
+    imagem = models.ImageField(upload_to='tfc/', blank=True, null=True)
+
     #Relacões
-    autores = models.ManyToManyField(Utilizador, related_name='tfc_autores')
-    orientadores = models.ManyToManyField(Docente)
-    tecnologias = models.ManyToManyField(Tecnologia)
+    licenciatura = models.ForeignKey(Licenciatura,on_delete=models.SET_NULL,null=True, blank=True)
+    autores = models.ManyToManyField(Utilizador, related_name='tfc_autores', blank=True)
+    orientadores = models.ManyToManyField(Docente, blank=True)
+    tecnologias = models.ManyToManyField(Tecnologia, blank=True)
     areas = models.ManyToManyField('Area', blank=True)
     palavras_chave = models.ManyToManyField('PalavraChave', blank=True)
-    
+
     #Como aparece no admin
     def __str__(self):
         return self.titulo
