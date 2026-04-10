@@ -17,10 +17,10 @@ class Utilizador(models.Model):
 #Licenciatura
 class Licenciatura(models.Model):
     nome = models.CharField(max_length=150)
-    sigla = models.CharField(max_length=20)
-    instituicao = models.CharField(max_length=150)
-    descricao = models.TextField()
-    duracao_anos = models.IntegerField()
+    sigla = models.CharField(max_length=20, blank=True)
+    instituicao = models.CharField(max_length=150, blank=True)
+    descricao = models.TextField(blank=True)
+    duracao_anos = models.IntegerField(null=True, blank=True)
 
     #Relacões
     utilizador = models.ForeignKey(Utilizador, on_delete=models.CASCADE)
