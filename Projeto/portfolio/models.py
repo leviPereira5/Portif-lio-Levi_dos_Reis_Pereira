@@ -50,7 +50,7 @@ class UC(models.Model):
     ano = models.IntegerField()
     semestre = models.IntegerField()
     descricao = models.TextField()
-    imagem = models.ImageField(upload_to='ucs/')
+    imagem = models.ImageField(upload_to='ucs/',blank=True, null=True)
 
     #Relacões
     licenciatura = models.ForeignKey(Licenciatura, on_delete=models.CASCADE)
@@ -66,7 +66,7 @@ class Tecnologia(models.Model):
     nome = models.CharField(max_length=100)
     tipo = models.CharField(max_length=50)
     descricao = models.TextField()
-    logo = models.ImageField(upload_to='tecnologias/')
+    logo = models.ImageField(upload_to='tecnologias/',blank=True, null=True)
     website_url = models.URLField()
     nivel_preferencia = models.IntegerField()
 
@@ -80,7 +80,7 @@ class Projeto(models.Model):
     titulo = models.CharField(max_length=150)
     descricao = models.TextField()
     data = models.DateField()
-    imagem = models.ImageField(upload_to='projetos/')
+    imagem = models.ImageField(upload_to='projetos/',blank=True, null=True)
     video_demo = models.URLField(blank=True)
     conceitos_aplicados = models.TextField()
     
@@ -148,7 +148,7 @@ class TFC(models.Model):
     ano = models.IntegerField()
     classificacao = models.IntegerField()
     pdf = models.URLField(blank=True)
-    imagem = models.ImageField(upload_to='tfc/')
+    imagem = models.ImageField(upload_to='tfc/',blank=True, null=True)
     licenciatura = models.ForeignKey(Licenciatura, on_delete=models.CASCADE)
     
     #Relacões
@@ -183,7 +183,7 @@ class PalavraChave(models.Model):
 class MakingOf(models.Model):
     descricao = models.TextField()
     data = models.DateField()
-    imagem = models.ImageField(upload_to='makingof/')
+    imagem = models.ImageField(upload_to='makingof/',blank=True, null=True)
     decisoes = models.TextField()
     erros = models.TextField()
     correcoes = models.TextField()
