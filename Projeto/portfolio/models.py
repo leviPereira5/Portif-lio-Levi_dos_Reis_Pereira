@@ -51,6 +51,8 @@ class UC(models.Model):
     ano = models.IntegerField(null=True, blank=True)
     semestre = models.IntegerField(null=True, blank=True)
     descricao = models.TextField(blank=True, null=True)
+    objetivos = models.TextField(blank=True)
+    conteudos = models.TextField(blank=True)
     ects = models.FloatField(null=True, blank=True)
     imagem = models.ImageField(upload_to='ucs/', blank=True, null=True)
 
