@@ -1,102 +1,88 @@
 import json
 import os
-from django.db import transaction
 from portfolio.models import (
     TFC, Utilizador, Docente, Tecnologia,
     Area, PalavraChave, Licenciatura
 )
 
+DIRETORIO_BASE = os.path.dirname(os.path.abspath(__file__))
+CAMINHO_FICHEIRO_JSON = os.path.join(DIRETORIO_BASE, "data", "tfcs_2025.json")
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-JSON_PATH = os.path.join(BASE_DIR, "data", "tfcs_2025.json")
 
-
-def split_values(value):
-    """
-    Converte strings tipo:
-    "A, B, C" -> ["A", "B", "C"]
-    """
-    if not value:
+def separar_valores(valor_bruto):
+    if not valor_bruto:
         return []
-    if isinstance(value, list):
-        return value
-    return [v.strip() for v in value.split(",") if v.strip()]
+    if isinstance(valor_bruto, list):
+        return [valor.strip().replace(".", "") for valor in valor_bruto if valor.strip()]
+    return [valor.strip().replace(".", "") for valor in valor_bruto.split(",") if valor.strip()]
 
 
-@transaction.atomic
-def load_tfc(debug=True):
-    print(f"A abrir: {JSON_PATH}")
+def carregar_tfcs():
+    with open(CAMINHO_FICHEIRO_JSON, encoding="utf-8") as ficheiro_json:
+        dados_json = json.load(ficheiro_json)
 
-    if not os.path.exists(JSON_PATH):
-        print("❌ Ficheiro não encontrado!")
-        return
+    lista_tfcs = dados_json.get("TFCs_2025", [])
 
-    with open(JSON_PATH, encoding="utf-8") as f:
-        data = json.load(f)
+    print(f"Total de TFCs: {len(lista_tfcs)}\n")
 
-    tfcs = data.get("TFCs_2025", [])
+    for item_tfc in lista_tfcs:
+        titulo_tfc = item_tfc.get("titulo")
 
-    print(f"Total de TFCs: {len(tfcs)}\n")
+        # LICENCIATURA
+        nome_licenciatura = item_tfc.get("licenciatura")
+        instancia_licenciatura = None
 
-    for item in tfcs:
-        titulo = item.get("titulo")
+        if nome_licenciatura:
+            instancia_licenciatura = Licenciatura.objects.create(
+                nome=nome_licenciatura.strip(),
+                utilizador_id=1
+            )
 
-        if debug:
-            print(f"📌 A processar: {titulo}")
-
-        # -------------------------
-        # 1. Criar TFC
-        # -------------------------
-        tfc = TFC.objects.create(
-            titulo=titulo,
-            descricao=item.get("sumario", ""),
-            ano=int(item.get("ano", 0)) if item.get("ano") else 0,
-            classificacao=item.get("rating", 0) or 0
+        # TFC
+        instancia_tfc = TFC.objects.create(
+            titulo=titulo_tfc,
+            descricao=item_tfc.get("sumario"),
+            ano=int(item_tfc.get("ano", 0)),
+            classificacao=item_tfc.get("rating", 0),
+            pdf=item_tfc.get("pdf", ""),
+            imagem=item_tfc.get("imagem", None),
+            licenciatura=instancia_licenciatura
         )
 
-        # -------------------------
-        # 2. AUTORES (M2M)
-        # -------------------------
-        for nome in split_values(item.get("autores")):
-            autor, _ = Utilizador.objects.get_or_create(nome=nome)
-            tfc.autores.add(autor)
-
-        # -------------------------
-        # 3. ORIENTADORES (M2M)
-        # -------------------------
-        for nome in split_values(item.get("orientadores")):
-            docente, _ = Docente.objects.get_or_create(nome=nome)
-            tfc.orientadores.add(docente)
-
-        # -------------------------
-        # 4. TECNOLOGIAS (M2M)
-        # -------------------------
-        for tech in split_values(item.get("tecnologias")):
-            t, _ = Tecnologia.objects.get_or_create(
-                nome=tech,
-                defaults={
-                    "tipo": "geral",
-                    "descricao": "",
-                    "website_url": "",
-                    "nivel_preferencia": 1
-                }
+        # AUTORES
+        for nome_autor in separar_valores(item_tfc.get("autores")):
+            instancia_autor = Utilizador.objects.create(
+                nome=nome_autor,
+                email="default@email.com"
             )
-            tfc.tecnologias.add(t)
+            instancia_tfc.autores.add(instancia_autor)
 
-        # -------------------------
-        # 5. ÁREAS (M2M)
-        # -------------------------
-        for area in split_values(item.get("areas")):
-            a, _ = Area.objects.get_or_create(nome=area)
-            tfc.areas.add(a)
+        # ORIENTADORES
+        for nome_docente in separar_valores(item_tfc.get("orientadores")):
+            instancia_docente = Docente.objects.create(nome=nome_docente)
+            instancia_tfc.orientadores.add(instancia_docente)
 
-        # -------------------------
-        # 6. PALAVRAS-CHAVE (M2M)
-        # -------------------------
-        for palavra in split_values(item.get("palavras_chave")):
-            p, _ = PalavraChave.objects.get_or_create(nome=palavra)
-            tfc.palavras_chave.add(p)
+        # TECNOLOGIAS
+        for nome_tecnologia in separar_valores(item_tfc.get("tecnologias")):
+            instancia_tecnologia = Tecnologia.objects.create(
+                nome=nome_tecnologia,
+                tipo="geral",
+                descricao="",
+                website_url="",
+                nivel_preferencia=1
+            )
+            instancia_tfc.tecnologias.add(instancia_tecnologia)
 
-        print(f"✔ Criado: {titulo}\n")
+        # ÁREAS
+        for nome_area in separar_valores(item_tfc.get("areas")):
+            instancia_area = Area.objects.create(nome=nome_area)
+            instancia_tfc.areas.add(instancia_area)
 
-    print("🎉 Importação concluída!")
+        # PALAVRAS-CHAVE
+        for nome_palavra in separar_valores(item_tfc.get("palavras_chave")):
+            instancia_palavra = PalavraChave.objects.create(nome=nome_palavra)
+            instancia_tfc.palavras_chave.add(instancia_palavra)
+
+        print(f"Criado o TFC com título: {titulo_tfc}")
+
+    print("\n A importação funcionou (EU ACHO :) !!! )")
