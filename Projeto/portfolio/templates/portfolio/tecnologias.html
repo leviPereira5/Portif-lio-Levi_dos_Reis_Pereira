@@ -1,0 +1,23 @@
+{% extends "portfolio/base.html" %}
+
+{% block content %}
+<h2>Tecnologias</h2>
+
+<section>
+    {% for t in tecnologias %}
+    <article>
+
+        <header>
+            <h3>{{ t.nome }}</h3>
+        </header>
+
+        <section>
+            <p><strong>Tipo:</strong> {{ t.tipo }}</p>
+            <p>{{ t.descricao }}</p>
+        </section>
+
+    </article>
+    {% endfor %}
+</section>
+
+{% endblock %}

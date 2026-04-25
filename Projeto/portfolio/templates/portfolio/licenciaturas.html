@@ -1,0 +1,22 @@
+{% extends "portfolio/base.html" %}
+{% block content %}
+<h2>Licenciaturas</h2>
+<section>
+    {% for lic in licenciaturas %}
+    <article>
+        <header>
+            <h3>{{ lic.nome }} {% if lic.sigla %}({{ lic.sigla }}){% endif %}</h3>
+            <p>{{ lic.instituicao }}</p>
+        </header>
+        <section>
+            <h4>Detalhes</h4>
+            <ul>
+                {% if lic.duracao_anos %}<li>Duração: {{ lic.duracao_anos }} anos</li>{% endif %}
+                {% if lic.descricao %}<li>{{ lic.descricao }}</li>{% endif %}
+            </ul>
+        </section>
+    </article>
+    {% empty %}<p>Sem licenciaturas.</p>
+    {% endfor %}
+</section>
+{% endblock %}

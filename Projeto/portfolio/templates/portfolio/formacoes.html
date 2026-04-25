@@ -1,0 +1,34 @@
+{% extends "portfolio/base.html" %}
+{% block content %}
+<h2>Formações</h2>
+<section>
+    {% for f in formacoes %}
+    <article>
+        <header>
+            <h3>{{ f.titulo }}</h3>
+            <p>{{ f.instituicao }} — {{ f.data_inicio }} a {{ f.data_fim }}</p>
+        </header>
+        <section>
+            <h4>Descrição</h4>
+            <ul><li>{{ f.descricao }}</li></ul>
+        </section>
+        <section>
+            <h4>Competências</h4>
+            <ul>
+                {% for comp in f.competencias.all %}
+                    <li>{{ comp.nome }}</li>
+                {% empty %}<li>Sem competências</li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% if f.certificado_url %}
+        <section>
+            <h4>Certificado</h4>
+            <ul><li><a href="{{ f.certificado_url }}" target="_blank">Ver certificado</a></li></ul>
+        </section>
+        {% endif %}
+    </article>
+    {% empty %}<p>Sem formações.</p>
+    {% endfor %}
+</section>
+{% endblock %}

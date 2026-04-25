@@ -1,0 +1,39 @@
+{% extends "portfolio/base.html" %}
+{% block content %}
+<h2>Making Of</h2>
+<section>
+    {% for m in makingofs %}
+    <article>
+        <header>
+            <h3>Making Of — {{ m.data }}</h3>
+            <p>{{ m.utilizador.nome }}</p>
+        </header>
+        <section>
+            <h4>Descrição</h4>
+            <ul><li>{{ m.descricao }}</li></ul>
+        </section>
+        <section>
+            <h4>Decisões</h4>
+            <ul><li>{{ m.decisoes }}</li></ul>
+        </section>
+        <section>
+            <h4>Erros</h4>
+            <ul><li>{{ m.erros }}</li></ul>
+        </section>
+        <section>
+            <h4>Correções</h4>
+            <ul><li>{{ m.correcoes }}</li></ul>
+        </section>
+        <section>
+            <h4>Justificação</h4>
+            <ul><li>{{ m.justificacao }}</li></ul>
+        </section>
+        <section>
+            <h4>Uso de IA</h4>
+            <ul><li>{{ m.uso_ia }}</li></ul>
+        </section>
+    </article>
+    {% empty %}<p>Sem entradas de making of.</p>
+    {% endfor %}
+</section>
+{% endblock %}

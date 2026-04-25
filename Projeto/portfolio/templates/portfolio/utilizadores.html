@@ -1,0 +1,26 @@
+{% extends "portfolio/base.html" %}
+{% block content %}
+<h2>Perfil</h2>
+<section>
+    {% for u in utilizadores %}
+    <article>
+        <header>
+            <h3>{{ u.nome }}</h3>
+            <p>{{ u.email }}</p>
+        </header>
+        <section>
+            <h4>Sobre</h4>
+            <ul><li>{{ u.bio }}</li></ul>
+        </section>
+        <section>
+            <h4>Links</h4>
+            <ul>
+                {% if u.linkedin_url %}<li><a href="{{ u.linkedin_url }}" target="_blank">LinkedIn</a></li>{% endif %}
+                {% if u.github_url %}<li><a href="{{ u.github_url }}" target="_blank">GitHub</a></li>{% endif %}
+            </ul>
+        </section>
+    </article>
+    {% empty %}<p>Sem utilizadores.</p>
+    {% endfor %}
+</section>
+{% endblock %}

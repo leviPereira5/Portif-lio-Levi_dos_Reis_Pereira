@@ -1,0 +1,28 @@
+{% extends "portfolio/base.html" %}
+{% block content %}
+<h2>Repositórios</h2>
+<section>
+    {% for repo in repositorios %}
+    <article>
+        <header>
+            <h3>{{ repo.nome }}</h3>
+            <p>{{ repo.visibilidade }} — Criado em {{ repo.data_criacao }}</p>
+        </header>
+        <section>
+            <h4>Tecnologias</h4>
+            <ul>
+                {% for tech in repo.tecnologias.all %}
+                    <li>{{ tech.nome }}</li>
+                {% empty %}<li>Sem tecnologias</li>
+                {% endfor %}
+            </ul>
+        </section>
+        <section>
+            <h4>Link</h4>
+            <ul><li><a href="{{ repo.url }}" target="_blank">Ver repositório</a></li></ul>
+        </section>
+    </article>
+    {% empty %}<p>Sem repositórios.</p>
+    {% endfor %}
+</section>
+{% endblock %}

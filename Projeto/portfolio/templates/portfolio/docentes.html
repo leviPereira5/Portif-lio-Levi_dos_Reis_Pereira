@@ -1,0 +1,21 @@
+{% extends "portfolio/base.html" %}
+{% block content %}
+<h2>Docentes</h2>
+<section>
+    {% for doc in docentes %}
+    <article>
+        <header>
+            <h3>{{ doc.nome }}</h3>
+            <p>{{ doc.email }}</p>
+        </header>
+        <section>
+            <h4>Links</h4>
+            <ul>
+                {% if doc.pagina_pessoal %}<li><a href="{{ doc.pagina_pessoal }}" target="_blank">Página Pessoal</a></li>{% endif %}
+            </ul>
+        </section>
+    </article>
+    {% empty %}<p>Sem docentes.</p>
+    {% endfor %}
+</section>
+{% endblock %}
