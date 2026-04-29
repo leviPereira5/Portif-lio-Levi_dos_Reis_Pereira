@@ -1,6 +1,7 @@
 {% extends "portfolio/base.html" %}
 {% block content %}
 <h2>Formações</h2>
+<a href="{% url 'criar_formacao' %}"><button type="button">+ Nova Formação</button></a>
 <section>
     {% for f in formacoes %}
     <article>
@@ -10,25 +11,37 @@
         </header>
         <section>
             <h4>Descrição</h4>
-            <ul><li>{{ f.descricao }}</li></ul>
+            <p>{{ f.descricao }}</p>
         </section>
         <section>
             <h4>Competências</h4>
             <ul>
                 {% for comp in f.competencias.all %}
                     <li>{{ comp.nome }}</li>
-                {% empty %}<li>Sem competências</li>
+                {% empty %}
+                    <li>Sem competências</li>
                 {% endfor %}
             </ul>
         </section>
         {% if f.certificado_url %}
         <section>
             <h4>Certificado</h4>
-            <ul><li><a href="{{ f.certificado_url }}" target="_blank">Ver certificado</a></li></ul>
+            <p><a href="{{ f.certificado_url }}" target="_blank">Ver certificado</a></p>
         </section>
         {% endif %}
+        <section>
+            <h4>Ações</h4>
+            <div style="display: flex; gap: 8px; margin-top: 8px;">
+                <a href="{% url 'editar_formacao' f.id %}"><button type="button">Editar</button></a>
+                <form method="post" action="{% url 'apagar_formacao' f.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Apagar</button>
+                </form>
+            </div>
+        </section>
     </article>
-    {% empty %}<p>Sem formações.</p>
+    {% empty %}
+        <p>Sem formações.</p>
     {% endfor %}
 </section>
 {% endblock %}

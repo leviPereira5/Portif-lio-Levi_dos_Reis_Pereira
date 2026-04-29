@@ -1,23 +1,18 @@
 {% extends "portfolio/base.html" %}
-
 {% block content %}
 <h2>Projetos</h2>
-
+<a href="{% url 'criar_projeto' %}"><button type="button">+ Novo Projeto</button></a>
 <section>
     {% for projeto in projetos %}
     <article>
-
         <header>
             <h3>{{ projeto.titulo }}</h3>
-
-            {% if projeto.imagem %}
-                <img src="{{ projeto.imagem.url }}" alt="Imagem de {{ projeto.titulo }}">
-            {% endif %}
-
-            <p><strong>UC:</strong> {{ projeto.uc.nome }}</p>
-            <p><strong>Autor:</strong> {{ projeto.utilizador.nome }}</p>
+            <p><strong>UC:</strong> {{ projeto.uc.nome }} &nbsp;|&nbsp; <strong>Autor:</strong> {{ projeto.utilizador.nome }}</p>
         </header>
-
+        <section>
+            <h4>Descrição</h4>
+            <p>{{ projeto.descricao }}</p>
+        </section>
         <section>
             <h4>Tecnologias</h4>
             <ul>
@@ -28,7 +23,6 @@
                 {% endfor %}
             </ul>
         </section>
-
         <section>
             <h4>Competências</h4>
             <ul>
@@ -39,9 +33,19 @@
                 {% endfor %}
             </ul>
         </section>
-
+        <section>
+            <h4>Ações</h4>
+            <div style="display: flex; gap: 8px; margin-top: 8px;">
+                <a href="{% url 'editar_projeto' projeto.id %}"><button type="button">Editar</button></a>
+                <form method="post" action="{% url 'apagar_projeto' projeto.id %}">
+                    {% csrf_token %}
+                    <button type="submit">🗑️ Apagar</button>
+                </form>
+            </div>
+        </section>
     </article>
+    {% empty %}
+        <p>Sem projetos.</p>
     {% endfor %}
 </section>
-
 {% endblock %}

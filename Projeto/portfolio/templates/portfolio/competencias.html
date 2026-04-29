@@ -1,6 +1,7 @@
 {% extends "portfolio/base.html" %}
 {% block content %}
 <h2>Competências</h2>
+<a href="{% url 'criar_competencia' %}"><button type="button">+ Nova Competência</button></a>
 <section>
     {% for comp in competencias %}
     <article>
@@ -10,10 +11,21 @@
         </header>
         <section>
             <h4>Descrição</h4>
-            <ul><li>{{ comp.descricao }}</li></ul>
+            <p>{{ comp.descricao }}</p>
+        </section>
+        <section>
+            <h4>Ações</h4>
+            <div style="display: flex; gap: 8px; margin-top: 8px;">
+                <a href="{% url 'editar_competencia' comp.id %}"><button type="button">Editar</button></a>
+                <form method="post" action="{% url 'apagar_competencia' comp.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Apagar</button>
+                </form>
+            </div>
         </section>
     </article>
-    {% empty %}<p>Sem competências.</p>
+    {% empty %}
+        <p>Sem competências.</p>
     {% endfor %}
 </section>
 {% endblock %}

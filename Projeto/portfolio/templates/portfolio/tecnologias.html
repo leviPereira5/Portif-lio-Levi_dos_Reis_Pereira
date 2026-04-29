@@ -1,23 +1,40 @@
 {% extends "portfolio/base.html" %}
-
 {% block content %}
 <h2>Tecnologias</h2>
-
+<a href="{% url 'criar_tecnologia' %}"><button type="button">+ Nova Tecnologia</button></a>
 <section>
-    {% for t in tecnologias %}
+    {% for tecnologia in tecnologias %}
     <article>
-
         <header>
-            <h3>{{ t.nome }}</h3>
+            <h3>{{ tecnologia.nome }}</h3>
+            <p>{{ tecnologia.tipo }}</p>
         </header>
-
         <section>
-            <p><strong>Tipo:</strong> {{ t.tipo }}</p>
-            <p>{{ t.descricao }}</p>
+            <h4>Descrição</h4>
+            <p>{{ tecnologia.descricao }}</p>
         </section>
-
+        <section>
+            <h4>Detalhes</h4>
+            <ul>
+                <li>Nível de preferência: {{ tecnologia.nivel_preferencia }}</li>
+                {% if tecnologia.website_url %}
+                    <li><a href="{{ tecnologia.website_url }}" target="_blank">Website</a></li>
+                {% endif %}
+            </ul>
+        </section>
+        <section>
+            <h4>Ações</h4>
+            <div style="display: flex; gap: 8px; margin-top: 8px;">
+                <a href="{% url 'editar_tecnologia' tecnologia.id %}"><button type="button">Editar</button></a>
+                <form method="post" action="{% url 'apagar_tecnologia' tecnologia.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Apagar</button>
+                </form>
+            </div>
+        </section>
     </article>
+    {% empty %}
+        <p>Sem tecnologias.</p>
     {% endfor %}
 </section>
-
 {% endblock %}

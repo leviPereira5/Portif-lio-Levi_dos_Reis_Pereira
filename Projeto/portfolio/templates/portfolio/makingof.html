@@ -10,30 +10,31 @@
         </header>
         <section>
             <h4>Descrição</h4>
-            <ul><li>{{ m.descricao }}</li></ul>
+            <p>{{ m.descricao }}</p>
         </section>
         <section>
             <h4>Decisões</h4>
-            <ul><li>{{ m.decisoes }}</li></ul>
+            <p>{{ m.decisoes }}</p>
         </section>
         <section>
             <h4>Erros</h4>
-            <ul><li>{{ m.erros }}</li></ul>
+            <p>{{ m.erros }}</p>
         </section>
         <section>
             <h4>Correções</h4>
-            <ul><li>{{ m.correcoes }}</li></ul>
+            <p>{{ m.correcoes }}</p>
         </section>
         <section>
             <h4>Justificação</h4>
-            <ul><li>{{ m.justificacao }}</li></ul>
+            <p>{{ m.justificacao }}</p>
         </section>
         <section>
             <h4>Uso de IA</h4>
-            <ul><li>{{ m.uso_ia }}</li></ul>
+            <p>{{ m.uso_ia }}</p>
         </section>
     </article>
-    {% empty %}<p>Sem entradas de making of.</p>
+    {% empty %}
+        <p>Sem entradas de making of.</p>
     {% endfor %}
 </section>
 {% endblock %}

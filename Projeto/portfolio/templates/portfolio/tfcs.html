@@ -1,17 +1,19 @@
 {% extends "portfolio/base.html" %}
-
 {% block content %}
-<h2>Trabalhos Finais de Curso</h2>
-
+<h2>TFCs</h2>
 <section>
     {% for tfc in tfcs %}
     <article>
-
         <header>
             <h3>{{ tfc.titulo }}</h3>
-            <p><strong>Licenciatura:</strong> {{ tfc.licenciatura.nome }}</p>
+            <p>{{ tfc.licenciatura.nome }} — {{ tfc.ano }}</p>
         </header>
-
+        {% if tfc.descricao %}
+        <section>
+            <h4>Descrição</h4>
+            <p>{{ tfc.descricao }}</p>
+        </section>
+        {% endif %}
         <section>
             <h4>Autores</h4>
             <ul>
@@ -22,7 +24,6 @@
                 {% endfor %}
             </ul>
         </section>
-
         <section>
             <h4>Tecnologias</h4>
             <ul>
@@ -33,9 +34,35 @@
                 {% endfor %}
             </ul>
         </section>
-
+        <section>
+            <h4>Áreas</h4>
+            <ul>
+                {% for area in tfc.areas.all %}
+                    <li>{{ area.nome }}</li>
+                {% empty %}
+                    <li>Sem áreas</li>
+                {% endfor %}
+            </ul>
+        </section>
+        <section>
+            <h4>Palavras-chave</h4>
+            <ul>
+                {% for pc in tfc.palavras_chave.all %}
+                    <li>{{ pc.nome }}</li>
+                {% empty %}
+                    <li>Sem palavras-chave</li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% if tfc.pdf %}
+        <section>
+            <h4>PDF</h4>
+            <p><a href="{{ tfc.pdf }}" target="_blank">Ver PDF</a></p>
+        </section>
+        {% endif %}
     </article>
+    {% empty %}
+        <p>Sem TFCs.</p>
     {% endfor %}
 </section>
-
 {% endblock %}

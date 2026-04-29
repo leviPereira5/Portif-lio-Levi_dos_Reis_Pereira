@@ -10,13 +10,12 @@
         </header>
         <section>
             <h4>Detalhes</h4>
-            <ul>
-                {% if lic.duracao_anos %}<li>Duração: {{ lic.duracao_anos }} anos</li>{% endif %}
-                {% if lic.descricao %}<li>{{ lic.descricao }}</li>{% endif %}
-            </ul>
+            <p>{% if lic.duracao_anos %}Duração: {{ lic.duracao_anos }} anos{% endif %}</p>
+            {% if lic.descricao %}<p>{{ lic.descricao }}</p>{% endif %}
         </section>
     </article>
-    {% empty %}<p>Sem licenciaturas.</p>
+    {% empty %}
+        <p>Sem licenciaturas.</p>
     {% endfor %}
 </section>
 {% endblock %}
