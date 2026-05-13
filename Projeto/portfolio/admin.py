@@ -75,3 +75,6 @@ class PalavraChaveAdmin(admin.ModelAdmin):
 @admin.register(MakingOf)
 class MakingOfAdmin(admin.ModelAdmin):
     list_display = ('id', 'data')
+
+
+admin.site.register(TipoTecnologia)

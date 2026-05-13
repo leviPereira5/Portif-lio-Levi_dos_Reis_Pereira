@@ -166,3 +166,18 @@ def apagar_formacao(request, id):
         formacao.delete()
         return redirect('formacoes_view')
     return render(request, 'portfolio/confirmar_apagar.html', {'objeto': formacao, 'voltar': 'formacoes_view'})
+
+
+
+def sobre_view(request):
+    makingofs = MakingOf.objects.select_related('utilizador').all()
+    try:
+        projeto_portfolio = Projeto.objects.get(titulo__icontains="Portfolio de Programação Web")
+        tecnologias_portfolio = projeto_portfolio.tecnologias.all().order_by('tipo', 'nome')
+    except Projeto.DoesNotExist:
+        tecnologias_portfolio = Tecnologia.objects.all().order_by('tipo', 'nome')
+ 
+    return render(request, 'portfolio/sobre.html', {
+        'makingofs': makingofs,
+        'tecnologias_portfolio': tecnologias_portfolio,
+    })

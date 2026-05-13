@@ -64,14 +64,21 @@ class UC(models.Model):
     def __str__(self):
         return self.nome    
 
+class TipoTecnologia(models.Model):
+    nome = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.nome
+
 #Tecnologia    
 class Tecnologia(models.Model):
     nome = models.CharField(max_length=100)
-    tipo = models.CharField(max_length=50)
     descricao = models.TextField()
     logo = models.ImageField(upload_to='tecnologias/',blank=True, null=True)
     website_url = models.URLField()
     nivel_preferencia = models.IntegerField()
+
+    tipo = models.ForeignKey( TipoTecnologia,  on_delete=models.CASCADE)
 
     #Como aparece no admin
     def __str__(self):

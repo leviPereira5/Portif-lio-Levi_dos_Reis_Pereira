@@ -1,0 +1,260 @@
+{% extends 'portfolio/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <h1 class="mb-5 text-center">
+        Sobre Esta Aplicação
+    </h1>
+
+
+    <!-- MVT -->
+    <section class="mb-5">
+
+        <h2>1. Arquitetura MVT do Django</h2>
+
+        <img src="{% static 'portfolio/images/mvt.jpg' %}"
+             class="img-fluid rounded shadow my-4"
+             alt="Arquitetura MVT">
+
+        <p>
+            A aplicação foi desenvolvida utilizando a arquitetura
+            MVT (Model View Template) do Django.
+        </p>
+
+        <h4>Componentes</h4>
+
+        <ul>
+            <li><strong>Model:</strong> representa a base de dados</li>
+            <li><strong>View:</strong> processa pedidos</li>
+            <li><strong>Template:</strong> apresenta HTML</li>
+        </ul>
+
+        <h4>Fluxo de Informação</h4>
+
+        <ol>
+            <li>O utilizador acede à página</li>
+            <li>A URL chama uma View</li>
+            <li>A View consulta os Models</li>
+            <li>Os dados são enviados para o Template</li>
+            <li>O HTML é apresentado ao utilizador</li>
+        </ol>
+
+
+        <!-- VIDEO -->
+        <div class="ratio ratio-16x9 mt-4">
+
+            <iframe
+                src="https://www.youtube.com/embed/ID_DO_VIDEO"
+                title="Vídeo Tutorial"
+                allowfullscreen>
+            </iframe>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- MODELACAO -->
+    <section class="mb-5">
+
+        <h2>2. Modelação</h2>
+
+        <img src="{% static 'portfolio/images/diagrama.jpg' %}"
+             class="img-fluid rounded shadow my-4"
+             alt="Diagrama ER">
+
+        <p>
+            A aplicação foi modelada utilizando várias entidades
+            relacionadas entre si.
+        </p>
+
+        <h4>Entidades Principais</h4>
+
+        <ul>
+            <li>Utilizador</li>
+            <li>Projeto</li>
+            <li>Tecnologia</li>
+            <li>UC</li>
+            <li>Repositorio</li>
+            <li>TFC</li>
+            <li>MakingOf</li>
+        </ul>
+
+    </section>
+
+
+
+    <!-- TECNOLOGIAS -->
+    <section class="mb-5">
+
+        <h2>3. Tecnologias</h2>
+
+        <div class="row">
+
+            {% for tecnologia in tecnologias %}
+
+            <div class="col-md-4 mb-4">
+
+                <div class="card h-100 shadow-sm">
+
+                    {% if tecnologia.logo %}
+
+                    <img src="{{ tecnologia.logo.url }}"
+                         class="card-img-top p-3"
+                         style="height: 200px; object-fit: contain;">
+
+                    {% endif %}
+
+                    <div class="card-body">
+
+                        <h5 class="card-title">
+                            {{ tecnologia.nome }}
+                        </h5>
+
+                        <p>
+                            <strong>Tipo:</strong>
+                            {{ tecnologia.tipo }}
+                        </p>
+
+                        <p>
+                            {{ tecnologia.descricao }}
+                        </p>
+
+                        <a href="{{ tecnologia.website_url }}"
+                           target="_blank"
+                           class="btn btn-dark">
+
+                            Website
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ESTRUTURA -->
+    <section class="mb-5">
+
+        <h2>4. Estrutura das Páginas</h2>
+
+        <img src="{% static 'portfolio/images/mapa.jpg' %}"
+             class="img-fluid rounded shadow my-4"
+             alt="Mapa Navegação">
+
+        <pre>
+Home
+│
+├── Sobre
+├── Projetos
+├── Tecnologias
+├── UC
+├── Repositórios
+├── Making Of
+└── Contactos
+        </pre>
+
+    </section>
+
+
+
+    <!-- GITHUB -->
+    <section class="mb-5">
+
+        <h2>5. Repositório GitHub</h2>
+
+        <a href="https://github.com/TEU_USER/TEU_REPO"
+           target="_blank"
+           class="btn btn-dark">
+
+            Ver Repositório
+
+        </a>
+
+        <p class="mt-3">
+            O GitHub foi utilizado para controlo de versões,
+            backup do projeto e organização do desenvolvimento.
+        </p>
+
+    </section>
+
+
+
+    <!-- MAKING OF -->
+    <section class="mb-5">
+
+        <h2>6. Making-Of</h2>
+
+        <div class="row">
+
+            {% for item in makingof %}
+
+            <div class="col-md-6 mb-4">
+
+                <div class="card shadow-sm h-100">
+
+                    {% if item.imagem %}
+
+                    <img src="{{ item.imagem.url }}"
+                         class="card-img-top">
+
+                    {% endif %}
+
+                    <div class="card-body">
+
+                        <h5>
+                            {{ item.data }}
+                        </h5>
+
+                        <p>
+                            {{ item.descricao }}
+                        </p>
+
+                        <p>
+                            <strong>Decisões:</strong>
+                            {{ item.decisoes }}
+                        </p>
+
+                        <p>
+                            <strong>Erros:</strong>
+                            {{ item.erros }}
+                        </p>
+
+                        <p>
+                            <strong>Correções:</strong>
+                            {{ item.correcoes }}
+                        </p>
+
+                        <p>
+                            <strong>Uso IA:</strong>
+                            {{ item.uso_ia }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}

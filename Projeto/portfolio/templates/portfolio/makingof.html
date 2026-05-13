@@ -1,40 +1,246 @@
 {% extends "portfolio/base.html" %}
+{% load markdownify %}
 {% block content %}
-<h2>Making Of</h2>
-<section>
-    {% for m in makingofs %}
-    <article>
-        <header>
-            <h3>Making Of — {{ m.data }}</h3>
-            <p>{{ m.utilizador.nome }}</p>
-        </header>
-        <section>
-            <h4>Descrição</h4>
-            <p>{{ m.descricao }}</p>
-        </section>
-        <section>
-            <h4>Decisões</h4>
-            <p>{{ m.decisoes }}</p>
-        </section>
-        <section>
-            <h4>Erros</h4>
-            <p>{{ m.erros }}</p>
-        </section>
-        <section>
-            <h4>Correções</h4>
-            <p>{{ m.correcoes }}</p>
-        </section>
-        <section>
-            <h4>Justificação</h4>
-            <p>{{ m.justificacao }}</p>
-        </section>
-        <section>
-            <h4>Uso de IA</h4>
-            <p>{{ m.uso_ia }}</p>
-        </section>
-    </article>
-    {% empty %}
-        <p>Sem entradas de making of.</p>
-    {% endfor %}
-</section>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@700;800&family=Inter:wght@300;400;500&display=swap');
+
+  :root {
+    --ink: #0f0e0d;
+    --paper: #f5f2ec;
+    --accent: #c0392b;
+    --rule: #d5cfc5;
+    --mid: #7f8c8d;
+  }
+
+  .mo-root {
+    font-family: 'Inter', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 5rem;
+  }
+
+  /* ── Hero ── */
+  .mo-hero {
+    border-top: 4px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+    padding: 2.5rem 0 1.5rem;
+    margin-bottom: 3rem;
+  }
+  .mo-hero .label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .68rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: .4rem;
+  }
+  .mo-hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 800;
+    margin: 0 0 .5rem;
+  }
+  .mo-hero h1 span { color: var(--accent); }
+  .mo-hero p {
+    font-size: .9rem;
+    color: var(--mid);
+    margin: 0;
+  }
+
+  /* ── Entry card ── */
+  .mo-entry {
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: #fff;
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+  .mo-entry-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .9rem 1.25rem;
+    background: var(--ink);
+    color: #fff;
+    gap: 1rem;
+  }
+  .mo-entry-header .mo-date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .72rem;
+    color: rgba(255,255,255,.5);
+    white-space: nowrap;
+  }
+  .mo-entry-header .mo-id {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .65rem;
+    color: var(--accent);
+    letter-spacing: .1em;
+  }
+
+  /* ── Fields grid ── */
+  .mo-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  @media (max-width: 640px) {
+    .mo-fields { grid-template-columns: 1fr; }
+  }
+  .mo-field {
+    padding: 1.1rem 1.25rem;
+    border-bottom: 1px solid var(--rule);
+    border-right: 1px solid var(--rule);
+  }
+  .mo-field:nth-child(even) { border-right: none; }
+  .mo-field.full {
+    grid-column: 1 / -1;
+    border-right: none;
+  }
+  .mo-field:last-child,
+  .mo-field:nth-last-child(2):nth-child(odd) {
+    border-bottom: none;
+  }
+
+  .mo-field-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .63rem;
+    text-transform: uppercase;
+    letter-spacing: .15em;
+    color: var(--accent);
+    margin-bottom: .5rem;
+  }
+
+  /* ── Markdownify output styling ── */
+  .mo-md-content {
+    font-size: .88rem;
+    line-height: 1.7;
+    color: #2c2c2c;
+  }
+  .mo-md-content h1,
+  .mo-md-content h2,
+  .mo-md-content h3,
+  .mo-md-content h4 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    margin: .8rem 0 .3rem;
+    color: var(--ink);
+  }
+  .mo-md-content h1 { font-size: 1.15rem; }
+  .mo-md-content h2 { font-size: 1rem; }
+  .mo-md-content h3 { font-size: .92rem; }
+  .mo-md-content p  { margin: .4rem 0; }
+  .mo-md-content ul,
+  .mo-md-content ol {
+    padding-left: 1.3rem;
+    margin: .4rem 0;
+  }
+  .mo-md-content li { margin: .2rem 0; }
+  .mo-md-content strong { color: var(--ink); }
+  .mo-md-content em { color: var(--mid); }
+  .mo-md-content a  { color: var(--accent); }
+  .mo-md-content blockquote {
+    border-left: 3px solid var(--rule);
+    margin: .5rem 0;
+    padding: .3rem .8rem;
+    color: var(--mid);
+    font-style: italic;
+  }
+
+  /* ── Imagem ── */
+  .mo-image {
+    width: 100%;
+    max-height: 280px;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* ── Empty ── */
+  .mo-empty {
+    text-align: center;
+    padding: 4rem 1rem;
+    color: var(--mid);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .85rem;
+    border: 1px dashed var(--rule);
+    border-radius: 4px;
+  }
+</style>
+
+<div class="mo-root">
+
+  <div class="mo-hero">
+    <div class="label">Diário de Desenvolvimento</div>
+    <h1>Making <span>Of</span></h1>
+    <p>Registo das decisões, erros, correções e uso de IA ao longo do projeto.</p>
+  </div>
+
+  {% for mo in makingofs %}
+  <div class="mo-entry">
+
+    <div class="mo-entry-header">
+      <span class="mo-id">entrada #{{ mo.id }}</span>
+      <span class="mo-date">{{ mo.data }}</span>
+    </div>
+
+    {% if mo.imagem %}
+    <img class="mo-image" src="{{ mo.imagem.url }}" alt="Making Of {{ mo.id }}">
+    {% endif %}
+
+    <div class="mo-fields">
+
+      {% if mo.descricao %}
+      <div class="mo-field full">
+        <div class="mo-field-label">📋 Descrição / Desafio</div>
+        <div class="mo-md-content">{{ mo.descricao | markdownify }}</div>
+      </div>
+      {% endif %}
+
+      {% if mo.decisoes %}
+      <div class="mo-field">
+        <div class="mo-field-label">🧭 Decisões Tomadas</div>
+        <div class="mo-md-content">{{ mo.decisoes | markdownify }}</div>
+      </div>
+      {% endif %}
+
+      {% if mo.erros %}
+      <div class="mo-field">
+        <div class="mo-field-label">⚠️ Erros Encontrados</div>
+        <div class="mo-md-content">{{ mo.erros | markdownify }}</div>
+      </div>
+      {% endif %}
+
+      {% if mo.correcoes %}
+      <div class="mo-field">
+        <div class="mo-field-label">✅ Correções Aplicadas</div>
+        <div class="mo-md-content">{{ mo.correcoes | markdownify }}</div>
+      </div>
+      {% endif %}
+
+      {% if mo.justificacao %}
+      <div class="mo-field">
+        <div class="mo-field-label">💡 Justificação</div>
+        <div class="mo-md-content">{{ mo.justificacao | markdownify }}</div>
+      </div>
+      {% endif %}
+
+      {% if mo.uso_ia %}
+      <div class="mo-field full">
+        <div class="mo-field-label">🤖 Uso de IA</div>
+        <div class="mo-md-content">{{ mo.uso_ia | markdownify }}</div>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+  {% empty %}
+  <div class="mo-empty">
+    Ainda não há registos de Making Of.<br>
+    Adiciona o primeiro no painel de administração.
+  </div>
+  {% endfor %}
+
+</div>
 {% endblock %}
