@@ -1,6 +1,16 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from .models import *
 from .forms import ProjetoForm, TecnologiaForm, CompetenciaForm, FormacaoForm
+
+
+# ── Helper ────────────────────────────────────────────────────────
+def é_gestor(user):
+    return user.is_authenticated and user.groups.filter(name='gestor-portfolio').exists()
+
+
+# ── Views de leitura (públicas) ───────────────────────────────────
 
 def utilizadores_view(request):
     utilizadores = Utilizador.objects.all()
@@ -25,24 +35,36 @@ def ucs_view(request):
 
 def tecnologias_view(request):
     tecnologias = Tecnologia.objects.all()
-    return render(request, 'portfolio/tecnologias.html', {'tecnologias': tecnologias})
+    return render(request, 'portfolio/tecnologias.html', {
+        'tecnologias': tecnologias,
+        'gestor': é_gestor(request.user),
+    })
 
 def projetos_view(request):
     projetos = Projeto.objects \
         .select_related('utilizador', 'uc') \
         .prefetch_related('tecnologias', 'competencias') \
         .all()
-    return render(request, 'portfolio/projetos.html', {'projetos': projetos})
+    return render(request, 'portfolio/projetos.html', {
+        'projetos': projetos,
+        'gestor': é_gestor(request.user),
+    })
 
 def formacoes_view(request):
     formacoes = Formacao.objects \
         .prefetch_related('competencias') \
         .all()
-    return render(request, 'portfolio/formacoes.html', {'formacoes': formacoes})
+    return render(request, 'portfolio/formacoes.html', {
+        'formacoes': formacoes,
+        'gestor': é_gestor(request.user),
+    })
 
 def competencias_view(request):
     competencias = Competencia.objects.all()
-    return render(request, 'portfolio/competencias.html', {'competencias': competencias})
+    return render(request, 'portfolio/competencias.html', {
+        'competencias': competencias,
+        'gestor': é_gestor(request.user),
+    })
 
 def repositorios_view(request):
     repositorios = Repositorio.objects \
@@ -72,103 +94,6 @@ def makingof_view(request):
         .all()
     return render(request, 'portfolio/makingof.html', {'makingofs': makingofs})
 
-
-# TODOS OS METODOS CRUD AI PARA BAIXO :)
-
-def criar_projeto(request):
-    form = ProjetoForm(request.POST or None, request.FILES or None)
-    if form.is_valid():
-        form.save()
-        return redirect('projetos_view')
-    return render(request, 'portfolio/form.html', {'form': form, 'titulo': 'Criar Projeto', 'voltar': 'projetos_view'})
-
-def editar_projeto(request, id):
-    projeto = get_object_or_404(Projeto, id=id)
-    form = ProjetoForm(request.POST or None, request.FILES or None, instance=projeto)
-    if form.is_valid():
-        form.save()
-        return redirect('projetos_view')
-    return render(request, 'portfolio/form.html', {'form': form, 'titulo': 'Editar Projeto', 'voltar': 'projetos_view'})
-
-def apagar_projeto(request, id):
-    projeto = get_object_or_404(Projeto, id=id)
-    if request.method == 'POST':
-        projeto.delete()
-        return redirect('projetos_view')
-    return render(request, 'portfolio/confirmar_apagar.html', {'objeto': projeto, 'voltar': 'projetos_view'})
-
-
-def criar_tecnologia(request):
-    form = TecnologiaForm(request.POST or None, request.FILES or None)
-    if form.is_valid():
-        form.save()
-        return redirect('tecnologias_view')
-    return render(request, 'portfolio/form.html', {'form': form, 'titulo': 'Criar Tecnologia', 'voltar': 'tecnologias_view'})
-
-def editar_tecnologia(request, id):
-    tecnologia = get_object_or_404(Tecnologia, id=id)
-    form = TecnologiaForm(request.POST or None, request.FILES or None, instance=tecnologia)
-    if form.is_valid():
-        form.save()
-        return redirect('tecnologias_view')
-    return render(request, 'portfolio/form.html', {'form': form, 'titulo': 'Editar Tecnologia', 'voltar': 'tecnologias_view'})
-
-def apagar_tecnologia(request, id):
-    tecnologia = get_object_or_404(Tecnologia, id=id)
-    if request.method == 'POST':
-        tecnologia.delete()
-        return redirect('tecnologias_view')
-    return render(request, 'portfolio/confirmar_apagar.html', {'objeto': tecnologia, 'voltar': 'tecnologias_view'})
-
-
-
-def criar_competencia(request):
-    form = CompetenciaForm(request.POST or None)
-    if form.is_valid():
-        form.save()
-        return redirect('competencias_view')
-    return render(request, 'portfolio/form.html', {'form': form, 'titulo': 'Criar Competência', 'voltar': 'competencias_view'})
-
-def editar_competencia(request, id):
-    competencia = get_object_or_404(Competencia, id=id)
-    form = CompetenciaForm(request.POST or None, instance=competencia)
-    if form.is_valid():
-        form.save()
-        return redirect('competencias_view')
-    return render(request, 'portfolio/form.html', {'form': form, 'titulo': 'Editar Competência', 'voltar': 'competencias_view'})
-
-def apagar_competencia(request, id):
-    competencia = get_object_or_404(Competencia, id=id)
-    if request.method == 'POST':
-        competencia.delete()
-        return redirect('competencias_view')
-    return render(request, 'portfolio/confirmar_apagar.html', {'objeto': competencia, 'voltar': 'competencias_view'})
-
-
-def criar_formacao(request):
-    form = FormacaoForm(request.POST or None)
-    if form.is_valid():
-        form.save()
-        return redirect('formacoes_view')
-    return render(request, 'portfolio/form.html', {'form': form, 'titulo': 'Criar Formação', 'voltar': 'formacoes_view'})
-
-def editar_formacao(request, id):
-    formacao = get_object_or_404(Formacao, id=id)
-    form = FormacaoForm(request.POST or None, instance=formacao)
-    if form.is_valid():
-        form.save()
-        return redirect('formacoes_view')
-    return render(request, 'portfolio/form.html', {'form': form, 'titulo': 'Editar Formação', 'voltar': 'formacoes_view'})
-
-def apagar_formacao(request, id):
-    formacao = get_object_or_404(Formacao, id=id)
-    if request.method == 'POST':
-        formacao.delete()
-        return redirect('formacoes_view')
-    return render(request, 'portfolio/confirmar_apagar.html', {'objeto': formacao, 'voltar': 'formacoes_view'})
-
-
-
 def sobre_view(request):
     makingofs = MakingOf.objects.select_related('utilizador').all()
     try:
@@ -176,8 +101,143 @@ def sobre_view(request):
         tecnologias_portfolio = projeto_portfolio.tecnologias.all().order_by('tipo', 'nome')
     except Projeto.DoesNotExist:
         tecnologias_portfolio = Tecnologia.objects.all().order_by('tipo', 'nome')
- 
     return render(request, 'portfolio/sobre.html', {
         'makingofs': makingofs,
         'tecnologias_portfolio': tecnologias_portfolio,
     })
+
+
+# ── CRUD Projetos ─────────────────────────────────────────────────
+
+@login_required
+def criar_projeto(request):
+    if not é_gestor(request.user):
+        raise PermissionDenied
+    form = ProjetoForm(request.POST or None, request.FILES or None)
+    if form.is_valid():
+        form.save()
+        return redirect('projetos_view')
+    return render(request, 'portfolio/form.html', {'form': form, 'titulo': 'Criar Projeto', 'voltar': 'projetos_view'})
+
+@login_required
+def editar_projeto(request, id):
+    if not é_gestor(request.user):
+        raise PermissionDenied
+    projeto = get_object_or_404(Projeto, id=id)
+    form = ProjetoForm(request.POST or None, request.FILES or None, instance=projeto)
+    if form.is_valid():
+        form.save()
+        return redirect('projetos_view')
+    return render(request, 'portfolio/form.html', {'form': form, 'titulo': 'Editar Projeto', 'voltar': 'projetos_view'})
+
+@login_required
+def apagar_projeto(request, id):
+    if not é_gestor(request.user):
+        raise PermissionDenied
+    projeto = get_object_or_404(Projeto, id=id)
+    if request.method == 'POST':
+        projeto.delete()
+        return redirect('projetos_view')
+    return render(request, 'portfolio/confirmar_apagar.html', {'objeto': projeto, 'voltar': 'projetos_view'})
+
+
+# ── CRUD Tecnologias ──────────────────────────────────────────────
+
+@login_required
+def criar_tecnologia(request):
+    if not é_gestor(request.user):
+        raise PermissionDenied
+    form = TecnologiaForm(request.POST or None, request.FILES or None)
+    if form.is_valid():
+        form.save()
+        return redirect('tecnologias_view')
+    return render(request, 'portfolio/form.html', {'form': form, 'titulo': 'Criar Tecnologia', 'voltar': 'tecnologias_view'})
+
+@login_required
+def editar_tecnologia(request, id):
+    if not é_gestor(request.user):
+        raise PermissionDenied
+    tecnologia = get_object_or_404(Tecnologia, id=id)
+    form = TecnologiaForm(request.POST or None, request.FILES or None, instance=tecnologia)
+    if form.is_valid():
+        form.save()
+        return redirect('tecnologias_view')
+    return render(request, 'portfolio/form.html', {'form': form, 'titulo': 'Editar Tecnologia', 'voltar': 'tecnologias_view'})
+
+@login_required
+def apagar_tecnologia(request, id):
+    if not é_gestor(request.user):
+        raise PermissionDenied
+    tecnologia = get_object_or_404(Tecnologia, id=id)
+    if request.method == 'POST':
+        tecnologia.delete()
+        return redirect('tecnologias_view')
+    return render(request, 'portfolio/confirmar_apagar.html', {'objeto': tecnologia, 'voltar': 'tecnologias_view'})
+
+
+# ── CRUD Competências ─────────────────────────────────────────────
+
+@login_required
+def criar_competencia(request):
+    if not é_gestor(request.user):
+        raise PermissionDenied
+    form = CompetenciaForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect('competencias_view')
+    return render(request, 'portfolio/form.html', {'form': form, 'titulo': 'Criar Competência', 'voltar': 'competencias_view'})
+
+@login_required
+def editar_competencia(request, id):
+    if not é_gestor(request.user):
+        raise PermissionDenied
+    competencia = get_object_or_404(Competencia, id=id)
+    form = CompetenciaForm(request.POST or None, instance=competencia)
+    if form.is_valid():
+        form.save()
+        return redirect('competencias_view')
+    return render(request, 'portfolio/form.html', {'form': form, 'titulo': 'Editar Competência', 'voltar': 'competencias_view'})
+
+@login_required
+def apagar_competencia(request, id):
+    if not é_gestor(request.user):
+        raise PermissionDenied
+    competencia = get_object_or_404(Competencia, id=id)
+    if request.method == 'POST':
+        competencia.delete()
+        return redirect('competencias_view')
+    return render(request, 'portfolio/confirmar_apagar.html', {'objeto': competencia, 'voltar': 'competencias_view'})
+
+
+# ── CRUD Formações ────────────────────────────────────────────────
+
+@login_required
+def criar_formacao(request):
+    if not é_gestor(request.user):
+        raise PermissionDenied
+    form = FormacaoForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect('formacoes_view')
+    return render(request, 'portfolio/form.html', {'form': form, 'titulo': 'Criar Formação', 'voltar': 'formacoes_view'})
+
+@login_required
+def editar_formacao(request, id):
+    if not é_gestor(request.user):
+        raise PermissionDenied
+    formacao = get_object_or_404(Formacao, id=id)
+    form = FormacaoForm(request.POST or None, instance=formacao)
+    if form.is_valid():
+        form.save()
+        return redirect('formacoes_view')
+    return render(request, 'portfolio/form.html', {'form': form, 'titulo': 'Editar Formação', 'voltar': 'formacoes_view'})
+
+@login_required
+def apagar_formacao(request, id):
+    if not é_gestor(request.user):
+        raise PermissionDenied
+    formacao = get_object_or_404(Formacao, id=id)
+    if request.method == 'POST':
+        formacao.delete()
+        return redirect('formacoes_view')
+    return render(request, 'portfolio/confirmar_apagar.html', {'objeto': formacao, 'voltar': 'formacoes_view'})
