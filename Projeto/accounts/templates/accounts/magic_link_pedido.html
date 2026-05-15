@@ -1,0 +1,31 @@
+{% extends 'portfolio/base.html' %}
+
+{% block content %}
+<div class="form-box">
+    <div class="form-icon">&#10024;</div>
+    <h2>Link Mágico</h2>
+
+    {% if enviado %}
+        <p class="sucesso">
+            &#9989; Email enviado!<br>
+            Se o endereço estiver registado, receberás um link em breve.
+            Verifica a tua caixa de entrada (e o spam).
+        </p>
+        <div class="form-links">
+            <a href="{% url 'login' %}">&larr; Voltar ao login</a>
+        </div>
+    {% else %}
+        <p class="form-subtitle">Introduz o teu email e enviamos-te um link para entrares sem palavra-passe.</p>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn-full" style="margin-top:8px;">Enviar Link Mágico</button>
+        </form>
+
+        <div class="form-links">
+            <a href="{% url 'login' %}">&larr; Voltar ao login</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

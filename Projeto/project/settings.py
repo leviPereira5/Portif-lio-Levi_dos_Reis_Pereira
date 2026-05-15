@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-ze(vlg2j-@mcp0w)*telwavy2#=c$jc2i#$b*obs$ed8bt*f_("
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'portfolio',
     'escola',
     'accounts',
+    'artigos',
     'markdownify.apps.MarkdownifyConfig',
 ]
 
@@ -129,6 +130,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 
+
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'noreply@portfolio.pt'
 
 MARKDOWNIFY = {
     "default": {

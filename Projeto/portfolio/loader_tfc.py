@@ -1,7 +1,14 @@
 import json
 import os
+import sys
+import django
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project.settings')
+django.setup()
+
 from portfolio.models import (
-    TFC, Utilizador, Docente, Tecnologia,
+    TFC, Utilizador, Docente, Tecnologia, TipoTecnologia,
     Area, PalavraChave, Licenciatura
 )
 
@@ -18,6 +25,18 @@ def separar_valores(valor_bruto):
 
 
 def carregar_tfcs():
+    # Garantir que existe um Utilizador para associar às Licenciaturas
+    utilizador = Utilizador.objects.first()
+    if not utilizador:
+        utilizador = Utilizador.objects.create(
+            nome="Admin",
+            email="admin@portfolio.pt"
+        )
+        print(f"Utilizador padrão criado: {utilizador.nome}")
+
+    # TipoTecnologia padrão para TFCs
+    tipo_geral, _ = TipoTecnologia.objects.get_or_create(nome="Geral")
+
     with open(CAMINHO_FICHEIRO_JSON, encoding="utf-8") as ficheiro_json:
         dados_json = json.load(ficheiro_json)
 
@@ -35,7 +54,7 @@ def carregar_tfcs():
         if nome_licenciatura:
             instancia_licenciatura = Licenciatura.objects.create(
                 nome=nome_licenciatura.strip(),
-                utilizador_id=1
+                utilizador=utilizador
             )
 
         # TFC
@@ -64,25 +83,31 @@ def carregar_tfcs():
 
         # TECNOLOGIAS
         for nome_tecnologia in separar_valores(item_tfc.get("tecnologias")):
-            instancia_tecnologia = Tecnologia.objects.create(
+            instancia_tecnologia, _ = Tecnologia.objects.get_or_create(
                 nome=nome_tecnologia,
-                tipo="geral",
-                descricao="",
-                website_url="",
-                nivel_preferencia=1
+                defaults={
+                    "tipo": tipo_geral,
+                    "descricao": "",
+                    "website_url": "",
+                    "nivel_preferencia": 1,
+                }
             )
             instancia_tfc.tecnologias.add(instancia_tecnologia)
 
         # ÁREAS
         for nome_area in separar_valores(item_tfc.get("areas")):
-            instancia_area = Area.objects.create(nome=nome_area)
+            instancia_area, _ = Area.objects.get_or_create(nome=nome_area)
             instancia_tfc.areas.add(instancia_area)
 
         # PALAVRAS-CHAVE
         for nome_palavra in separar_valores(item_tfc.get("palavras_chave")):
-            instancia_palavra = PalavraChave.objects.create(nome=nome_palavra)
+            instancia_palavra, _ = PalavraChave.objects.get_or_create(nome=nome_palavra)
             instancia_tfc.palavras_chave.add(instancia_palavra)
 
         print(f"Criado o TFC com título: {titulo_tfc}")
 
     print("\n A importação funcionou (EU ACHO :) !!! )")
+
+
+if __name__ == '__main__':
+    carregar_tfcs()

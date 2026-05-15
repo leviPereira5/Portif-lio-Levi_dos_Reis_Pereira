@@ -17,7 +17,16 @@
     <header>
         <h1>Escola</h1>
         <nav>
-            <a href="{% url 'cursos' %}">Cursos</a>   
+            <a href="{% url 'home' %}">Início</a>
+            {% if user.is_authenticated %}
+                <span>Olá, <strong>{{ user.username }}</strong></span>
+                {% if user.is_staff %} <a href="{% url 'admin:index' %}">Admin</a> {% endif %}
+                <a href="{% url 'logout' %}">Sair</a>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'registo' %}">Registo</a>
+                <a href="{% url 'pedir_magic_link' %}">Link Mágico</a>
+            {% endif %}
         </nav>
     </header>
 

@@ -1,6 +1,12 @@
 import os
-import requests
+import sys
+import django
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project.settings')
+django.setup()
+
+import requests
 from portfolio.models import Licenciatura, UC, Utilizador, Docente
 
 
@@ -214,4 +220,5 @@ def importar_dados():
     print(f"   Docentes      : {Docente.objects.count()}")
     print(f"   UCs           : {UC.objects.count()}")
 
-importar_dados()
+if __name__ == '__main__':
+    importar_dados()

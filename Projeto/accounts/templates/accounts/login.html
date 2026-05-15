@@ -1,137 +1,32 @@
-{% extends "portfolio/base.html" %}
+{% extends 'portfolio/base.html' %}
+
 {% block content %}
-
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@700;800&family=Inter:wght@400;500&display=swap');
-  :root { --ink:#0f0e0d; --paper:#f5f2ec; --accent:#c0392b; --rule:#d5cfc5; --mid:#7f8c8d; }
-
-  .auth-wrap {
-    font-family: 'Inter', sans-serif;
-    min-height: 60vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 3rem 1rem;
-  }
-  .auth-card {
-    background: #fff;
-    border: 1px solid var(--rule);
-    border-top: 4px solid var(--ink);
-    border-radius: 4px;
-    padding: 2.5rem 2rem;
-    width: 100%;
-    max-width: 420px;
-  }
-  .auth-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: .65rem;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    color: var(--mid);
-    margin-bottom: .4rem;
-  }
-  .auth-card h2 {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.8rem;
-    font-weight: 800;
-    margin: 0 0 2rem;
-  }
-  .auth-card h2 span { color: var(--accent); }
-
-  .auth-field { margin-bottom: 1.25rem; }
-  .auth-field label {
-    display: block;
-    font-size: .78rem;
-    font-weight: 500;
-    margin-bottom: .35rem;
-    color: var(--ink);
-  }
-  .auth-field input {
-    width: 100%;
-    box-sizing: border-box;
-    border: 1px solid var(--rule);
-    border-radius: 3px;
-    padding: .6rem .8rem;
-    font-size: .9rem;
-    font-family: 'Inter', sans-serif;
-    background: var(--paper);
-    color: var(--ink);
-    transition: border-color .15s;
-  }
-  .auth-field input:focus {
-    outline: none;
-    border-color: var(--ink);
-  }
-  .auth-field .field-errors {
-    font-size: .75rem;
-    color: var(--accent);
-    margin-top: .3rem;
-    font-family: 'IBM Plex Mono', monospace;
-  }
-
-  .auth-erro {
-    background: #fdf0ef;
-    border: 1px solid #f0b9b4;
-    border-left: 3px solid var(--accent);
-    border-radius: 3px;
-    padding: .6rem .9rem;
-    font-size: .82rem;
-    color: var(--accent);
-    margin-bottom: 1.25rem;
-    font-family: 'IBM Plex Mono', monospace;
-  }
-
-  .auth-btn {
-    width: 100%;
-    background: var(--ink);
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    padding: .75rem;
-    font-family: 'Syne', sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background .15s;
-    margin-top: .5rem;
-  }
-  .auth-btn:hover { background: var(--accent); }
-
-  .auth-link {
-    text-align: center;
-    margin-top: 1.25rem;
-    font-size: .82rem;
-    color: var(--mid);
-  }
-  .auth-link a { color: var(--accent); text-decoration: none; font-weight: 500; }
-</style>
-
-<div class="auth-wrap">
-  <div class="auth-card">
-    <div class="auth-label">Autenticação</div>
-    <h2>Bem-vindo <span>de volta</span></h2>
+<div class="form-box">
+    <div class="form-icon">&#128274;</div>
+    <h2>Bem-vindo de volta</h2>
+    <p class="form-subtitle">Inicia sessão para acederes ao portfólio</p>
 
     {% if erro %}
-    <div class="auth-erro">⚠ {{ erro }}</div>
+        <p class="erro">&#9888; {{ erro }}</p>
     {% endif %}
 
     <form method="post">
-      {% csrf_token %}
-      {% for field in form %}
-      <div class="auth-field">
-        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-        {{ field }}
-        {% if field.errors %}
-        <div class="field-errors">{{ field.errors|join:", " }}</div>
-        {% endif %}
-      </div>
-      {% endfor %}
-      <button class="auth-btn" type="submit">Entrar →</button>
+        {% csrf_token %}
+        <label for="username">Utilizador</label>
+        <input type="text" id="username" name="username" placeholder="O teu nome de utilizador" required autofocus>
+
+        <label for="password">Palavra-passe</label>
+        <input type="password" id="password" name="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" required>
+
+        <button type="submit" class="btn-full" style="margin-top:8px;">Entrar</button>
     </form>
 
-    <div class="auth-link">
-      Não tens conta? <a href="{% url 'registo' %}">Registar</a>
+    <div class="form-divider">ou</div>
+
+    <a href="{% url 'pedir_magic_link' %}" class="btn-full" style="background:#6366f1;">&#128279; Entrar com Link Mágico</a>
+
+    <div class="form-links">
+        <span>Ainda não tens conta? <a href="{% url 'registo' %}">Criar conta</a></span>
     </div>
-  </div>
 </div>
 {% endblock %}

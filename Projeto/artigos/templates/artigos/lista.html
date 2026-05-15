@@ -1,0 +1,36 @@
+{% extends 'portfolio/base.html' %}
+
+{% block content %}
+<h2>Artigos</h2>
+
+{% if request.user.is_authenticated %}
+    {% for g in request.user.groups.all %}
+        {% if g.name == 'autores' %}
+            <a href="{% url 'criar_artigo' %}" class="novo-btn">+ Novo Artigo</a>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+<section>
+    {% for artigo in artigos %}
+    <article>
+        <header>
+            <h3><a href="{% url 'detalhe_artigo' artigo.pk %}">{{ artigo.titulo }}</a></h3>
+            <p>Por <strong>{{ artigo.autor.username }}</strong> &nbsp;|&nbsp; {{ artigo.criado_em|date:"d/m/Y" }} &nbsp;|&nbsp; ❤️ {{ artigo.total_likes }}</p>
+        </header>
+        {% if artigo.fotografia %}
+        <section>
+            <img src="{{ artigo.fotografia.url }}" class="artigo-thumb" alt="{{ artigo.titulo }}">
+        </section>
+        {% endif %}
+        <section>
+            <p>{{ artigo.texto|truncatewords:35 }}</p>
+            <br>
+            <a href="{% url 'detalhe_artigo' artigo.pk %}">Ler mais &rarr;</a>
+        </section>
+    </article>
+    {% empty %}
+    <p>Ainda não há artigos publicados.</p>
+    {% endfor %}
+</section>
+{% endblock %}

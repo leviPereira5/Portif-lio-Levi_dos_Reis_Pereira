@@ -3,28 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfólio</title>
+    <title>Portfólio Académico</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'portfolio/styles.css' %}">
 </head>
 <body>
 
 <header>
-    <h1>Portfólio Académico</h1>
-    <nav>
-        <a href="{% url 'projetos_view' %}">Projetos</a>
-        <a href="{% url 'tecnologias_view' %}">Tecnologias</a>
-        <a href="{% url 'ucs_view' %}">UCs</a>
-        <a href="{% url 'docentes_view' %}">Docentes</a>
-        <a href="{% url 'tfcs_view' %}">TFCs</a>
-        <a href="{% url 'utilizadores_view' %}">Perfil</a>
-        <a href="{% url 'licenciaturas_view' %}">Licenciaturas</a>
-        <a href="{% url 'formacoes_view' %}">Formações</a>
-        <a href="{% url 'competencias_view' %}">Competências</a>
-        <a href="{% url 'repositorios_view' %}">Repositórios</a>
-        <a href="{% url 'makingof_view' %}">Making Of</a>
-        <a href="{% url 'sobre_view' %}">Sobre</a>
-    </nav>
+
+    <!-- Linha superior: marca + auth -->
+    <div class="header-brand">
+        <div class="brand-logo">
+            <span class="brand-dot"></span>
+            <h1>Portfólio Académico</h1>
+        </div>
+
+        <div class="auth-nav">
+            {% if request.user.is_authenticated %}
+                <span class="auth-user">
+                    &#128100; {{ request.user.username }}
+                    {% if request.user.groups.all %}
+                        <small>({{ request.user.groups.first.name }})</small>
+                    {% endif %}
+                </span>
+                {% if request.user.is_staff %}
+                    <a href="{% url 'admin:index' %}" class="btn-ghost">Admin</a>
+                {% endif %}
+                <a href="{% url 'logout' %}" class="btn-ghost">Sair</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn-ghost">Entrar</a>
+                <a href="{% url 'registo' %}" class="btn-primary">Registar</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Linha inferior: navegação -->
+    <div class="header-nav">
+        <nav>
+            <a href="{% url 'projetos_view' %}">Projetos</a>
+            <a href="{% url 'tecnologias_view' %}">Tecnologias</a>
+            <a href="{% url 'ucs_view' %}">UCs</a>
+            <a href="{% url 'docentes_view' %}">Docentes</a>
+            <a href="{% url 'tfcs_view' %}">TFCs</a>
+            <a href="{% url 'licenciaturas_view' %}">Licenciaturas</a>
+            <a href="{% url 'formacoes_view' %}">Formações</a>
+            <a href="{% url 'competencias_view' %}">Competências</a>
+            <a href="{% url 'repositorios_view' %}">Repositórios</a>
+            <a href="{% url 'makingof_view' %}">Making Of</a>
+            <a href="{% url 'sobre_view' %}">Sobre</a>
+            <a href="{% url 'utilizadores_view' %}">Perfil</a>
+            <a href="{% url 'lista_artigos' %}">Artigos</a>
+        </nav>
+    </div>
+
 </header>
 
 <main>
@@ -33,7 +64,7 @@
 </main>
 
 <footer>
-    <p>&copy; 2026 - Portfólio</p>
+    <p>&copy; 2026 &mdash; Portfólio Académico</p>
 </footer>
 
 </body>

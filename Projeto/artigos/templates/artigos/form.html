@@ -1,0 +1,15 @@
+{% extends 'portfolio/base.html' %}
+
+{% block content %}
+<div class="form-box">
+    <h2>{{ titulo }}</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div style="display:flex; gap:12px; margin-top:8px;">
+            <button type="submit">Guardar</button>
+            <a href="{% url 'lista_artigos' %}" style="font-size:14px; color:#6b7280; align-self:center;">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

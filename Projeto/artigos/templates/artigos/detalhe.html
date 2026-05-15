@@ -1,0 +1,75 @@
+{% extends 'portfolio/base.html' %}
+
+{% block content %}
+<div class="artigo-detalhe">
+    <h2>{{ artigo.titulo }}</h2>
+    <p class="artigo-meta">
+        Por <strong>{{ artigo.autor.username }}</strong> &nbsp;·&nbsp; {{ artigo.criado_em|date:"d/m/Y H:i" }}
+    </p>
+
+    {% if artigo.fotografia %}
+        <img src="{{ artigo.fotografia.url }}" class="artigo-foto" alt="{{ artigo.titulo }}">
+    {% endif %}
+
+    <p class="artigo-texto">{{ artigo.texto }}</p>
+
+    {% if artigo.link_externo %}
+        <a href="{{ artigo.link_externo }}" class="artigo-link-externo" target="_blank" rel="noopener">
+            &#128279; Ver link externo
+        </a>
+    {% endif %}
+
+    {% if request.user == artigo.autor %}
+    <div class="artigo-acoes">
+        <a href="{% url 'editar_artigo' artigo.pk %}" class="btn">&#9998; Editar artigo</a>
+    </div>
+    {% endif %}
+</div>
+
+{# ── Likes ── #}
+<div class="likes-section">
+    <form method="post" action="{% url 'gostar_artigo' artigo.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn-like {% if ja_gostou %}gostou{% endif %}">
+            {% if ja_gostou %}&#128148; Retirar gosto{% else %}&#10084;&#65039; Gostei{% endif %}
+        </button>
+    </form>
+    <span class="likes-count">{{ artigo.total_likes }} gosto{{ artigo.total_likes|pluralize:"s" }}</span>
+</div>
+
+{# ── Comentários ── #}
+<div class="comentarios-section">
+    <h3>Comentários ({{ comentarios.count }})</h3>
+
+    {% for comentario in comentarios %}
+    <div class="comentario">
+        <div class="comentario-header">
+            <span class="comentario-autor">{{ comentario.autor.username }}</span>
+            <span class="comentario-data">{{ comentario.criado_em|date:"d/m/Y H:i" }}</span>
+        </div>
+        <p>{{ comentario.texto }}</p>
+    </div>
+    {% empty %}
+    <p style="color:#6b7280; font-size:14px;">Ainda sem comentários. Sê o primeiro!</p>
+    {% endfor %}
+
+    {% if request.user.is_authenticated %}
+    <div class="comentario-form-box">
+        <h4>Deixar um comentário</h4>
+        <form method="post" action="{% url 'comentar_artigo' artigo.pk %}">
+            {% csrf_token %}
+            {{ form_comentario.as_p }}
+            <button type="submit">Comentar</button>
+        </form>
+    </div>
+    {% else %}
+    <div class="comentario-form-box">
+        <p style="font-size:14px; color:#6b7280;">
+            <a href="{% url 'login' %}">Inicia sessão</a> para deixar um comentário.
+        </p>
+    </div>
+    {% endif %}
+</div>
+
+<a href="{% url 'lista_artigos' %}" class="back-link">&larr; Voltar aos artigos</a>
+{% endblock %}

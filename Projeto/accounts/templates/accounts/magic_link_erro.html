@@ -1,0 +1,17 @@
+{% extends 'portfolio/base.html' %}
+
+{% block content %}
+<div class="form-box">
+    <div class="form-icon">&#128683;</div>
+    <h2>Link Inválido</h2>
+    <p class="form-subtitle">Este link expirou ou não é válido.</p>
+
+    <p class="erro">&#9888; Os links mágicos expiram ao fim de 10 minutos. Pede um novo para continuares.</p>
+
+    <a href="{% url 'pedir_magic_link' %}" class="btn-full">Pedir novo link</a>
+
+    <div class="form-links">
+        <a href="{% url 'login' %}">&larr; Voltar ao login</a>
+    </div>
+</div>
+{% endblock %}
