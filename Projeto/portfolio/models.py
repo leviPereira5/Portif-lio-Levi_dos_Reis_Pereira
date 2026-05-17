@@ -34,7 +34,7 @@ class Licenciatura(models.Model):
 #Docente
 #class auxiliar 
 class Docente(models.Model):
-    nome = models.CharField(max_length=100)
+    nome = models.CharField(max_length=300)
     email = models.EmailField()
     pagina_pessoal = models.URLField(blank=True)
     foto = models.ImageField(upload_to='docentes/', null=True, blank=True)
@@ -161,7 +161,7 @@ class TFC(models.Model):
     classificacao = models.IntegerField(null=True, blank=True)
 
     pdf = models.URLField(blank=True)
-    imagem = models.ImageField(upload_to='tfc/', blank=True, null=True)
+    imagem = models.ImageField(upload_to='tfc/', blank=True, null=True, max_length=300)
 
     #Relacões
     licenciatura = models.ForeignKey(Licenciatura,on_delete=models.SET_NULL,null=True, blank=True)
@@ -186,7 +186,7 @@ class Area(models.Model):
 
 #Palavra chave
 class PalavraChave(models.Model):
-    nome = models.CharField(max_length=100)
+    nome = models.CharField(max_length=300)
 
     def __str__(self):
         return self.nome
