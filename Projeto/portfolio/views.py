@@ -10,22 +10,40 @@ def é_gestor(user):
     return user.is_authenticated and user.groups.filter(name='gestor-portfolio').exists()
 
 
-# ── Views de leitura (públicas) ───────────────────────────────────
+# ── Landing page ──────────────────────────────────────────────────
 
+def landing_view(request):
+    if request.user.is_authenticated:
+        return redirect('projetos_view')
+    utilizador = Utilizador.objects.first()
+    return render(request, 'portfolio/landing.html', {
+        'utilizador': utilizador,
+        'num_projetos': Projeto.objects.count(),
+        'num_tecnologias': Tecnologia.objects.count(),
+        'num_ucs': UC.objects.count(),
+    })
+
+
+# ── Views de leitura (protegidas) ────────────────────────────────
+
+@login_required
 def utilizadores_view(request):
     utilizadores = Utilizador.objects.all()
     return render(request, 'portfolio/utilizadores.html', {'utilizadores': utilizadores})
 
+@login_required
 def licenciaturas_view(request):
     licenciaturas = Licenciatura.objects \
         .select_related('utilizador') \
         .all()
     return render(request, 'portfolio/licenciaturas.html', {'licenciaturas': licenciaturas})
 
+@login_required
 def docentes_view(request):
     docentes = Docente.objects.all()
     return render(request, 'portfolio/docentes.html', {'docentes': docentes})
 
+@login_required
 def ucs_view(request):
     ucs = UC.objects \
         .select_related('licenciatura') \
@@ -33,6 +51,7 @@ def ucs_view(request):
         .all()
     return render(request, 'portfolio/ucs.html', {'ucs': ucs})
 
+@login_required
 def tecnologias_view(request):
     tecnologias = Tecnologia.objects.all()
     return render(request, 'portfolio/tecnologias.html', {
@@ -40,6 +59,7 @@ def tecnologias_view(request):
         'gestor': é_gestor(request.user),
     })
 
+@login_required
 def projetos_view(request):
     projetos = Projeto.objects \
         .select_related('utilizador', 'uc') \
@@ -50,6 +70,7 @@ def projetos_view(request):
         'gestor': é_gestor(request.user),
     })
 
+@login_required
 def formacoes_view(request):
     formacoes = Formacao.objects \
         .prefetch_related('competencias') \
@@ -59,6 +80,7 @@ def formacoes_view(request):
         'gestor': é_gestor(request.user),
     })
 
+@login_required
 def competencias_view(request):
     competencias = Competencia.objects.all()
     return render(request, 'portfolio/competencias.html', {
@@ -66,6 +88,7 @@ def competencias_view(request):
         'gestor': é_gestor(request.user),
     })
 
+@login_required
 def repositorios_view(request):
     repositorios = Repositorio.objects \
         .select_related('utilizador', 'projeto') \
@@ -73,6 +96,7 @@ def repositorios_view(request):
         .all()
     return render(request, 'portfolio/repositorios.html', {'repositorios': repositorios})
 
+@login_required
 def tfcs_view(request):
     tfcs = TFC.objects \
         .select_related('licenciatura') \
@@ -80,20 +104,24 @@ def tfcs_view(request):
         .all()
     return render(request, 'portfolio/tfcs.html', {'tfcs': tfcs})
 
+@login_required
 def areas_view(request):
     areas = Area.objects.all()
     return render(request, 'portfolio/areas.html', {'areas': areas})
 
+@login_required
 def palavras_chave_view(request):
     palavras_chave = PalavraChave.objects.all()
     return render(request, 'portfolio/palavras_chave.html', {'palavras_chave': palavras_chave})
 
+@login_required
 def makingof_view(request):
     makingofs = MakingOf.objects \
         .select_related('utilizador') \
         .all()
     return render(request, 'portfolio/makingof.html', {'makingofs': makingofs})
 
+@login_required
 def sobre_view(request):
     makingofs = MakingOf.objects.select_related('utilizador').all()
     try:

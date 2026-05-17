@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 import environ
+import dj_database_url
 import os
 
 env = environ.Env()
@@ -85,9 +86,9 @@ WSGI_APPLICATION = "project.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    "default": env.db("DATABASE_URL")
-}
+_db = dj_database_url.parse(env('DATABASE_URL'))
+_db.setdefault('ENGINE', 'django.db.backends.postgresql')
+DATABASES = {"default": _db}
 
 
 # Password validation
@@ -145,11 +146,13 @@ STORAGES = {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
 
 
+
+WHITENOISE_USE_FINDERS = True
 
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'

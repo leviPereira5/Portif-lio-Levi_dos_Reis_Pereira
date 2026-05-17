@@ -1,19 +1,82 @@
-{% extends 'portfolio/base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Conta · Portfólio</title>
+    <link rel="stylesheet" href="{% static 'portfolio/styles.css' %}">
+</head>
+<body class="auth-body">
 
-{% block content %}
-<div class="form-box">
-    <div class="form-icon">&#128100;</div>
-    <h2>Criar Conta</h2>
-    <p class="form-subtitle">Regista-te e começa a publicar artigos</p>
+<div class="auth-split">
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn-full" style="margin-top:12px;">Criar conta</button>
-    </form>
+    <!-- PAINEL ESQUERDO — branding -->
+    <div class="auth-left">
+        <div class="auth-left-dots"></div>
+        <div class="auth-left-body">
 
-    <div class="form-links">
-        <span>Já tens conta? <a href="{% url 'login' %}">Iniciar sessão</a></span>
+            <div class="auth-logo-row">
+                <div class="auth-logo-icon">LP</div>
+                <span class="auth-logo-label">Portfólio</span>
+            </div>
+
+            <div class="auth-left-center">
+                <h2 class="auth-left-headline">
+                    Junta-te ao<br>
+                    <span>portfólio</span><br>
+                    académico
+                </h2>
+                <p class="auth-left-desc">
+                    Cria a tua conta e começa a explorar projetos, tecnologias e o percurso académico.
+                </p>
+                <div class="auth-features">
+                    <div class="auth-feature">
+                        <span class="auth-feature-dot"></span>
+                        Acesso completo ao portfólio
+                    </div>
+                    <div class="auth-feature">
+                        <span class="auth-feature-dot"></span>
+                        Publica artigos e comentários
+                    </div>
+                    <div class="auth-feature">
+                        <span class="auth-feature-dot"></span>
+                        Explora tecnologias e UCs
+                    </div>
+                    <div class="auth-feature">
+                        <span class="auth-feature-dot"></span>
+                        Acompanha o percurso académico
+                    </div>
+                </div>
+            </div>
+
+            <div class="auth-left-foot">
+                &copy; 2026 Levi Pereira &middot; Universidade Lusófona
+            </div>
+
+        </div>
     </div>
+
+    <!-- PAINEL DIREITO — formulário -->
+    <div class="auth-right">
+        <div class="auth-box">
+
+            <h1 class="auth-box-title">Criar conta</h1>
+            <p class="auth-box-sub">Regista-te para acederes ao portfólio.</p>
+
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="auth-submit-btn">Criar conta</button>
+            </form>
+
+            <p class="auth-bottom">
+                Já tens conta? <a href="{% url 'login' %}">Iniciar sessão</a>
+            </p>
+
+        </div>
+    </div>
+
 </div>
-{% endblock %}
+</body>
+</html>

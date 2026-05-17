@@ -9,11 +9,13 @@ def _e_autor(user):
     return user.is_authenticated and user.groups.filter(name='autores').exists()
 
 
+@login_required
 def lista_artigos(request):
     artigos = Artigo.objects.order_by('-criado_em')
     return render(request, 'artigos/lista.html', {'artigos': artigos})
 
 
+@login_required
 def detalhe_artigo(request, pk):
     artigo = get_object_or_404(Artigo, pk=pk)
     comentarios = artigo.comentarios.order_by('criado_em')

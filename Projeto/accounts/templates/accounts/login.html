@@ -1,32 +1,125 @@
-{% extends 'portfolio/base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar · Portfólio</title>
+    <link rel="stylesheet" href="{% static 'portfolio/styles.css' %}">
+</head>
+<body class="auth-body">
 
-{% block content %}
-<div class="form-box">
-    <div class="form-icon">&#128274;</div>
-    <h2>Bem-vindo de volta</h2>
-    <p class="form-subtitle">Inicia sessão para acederes ao portfólio</p>
+<div class="auth-split">
 
-    {% if erro %}
-        <p class="erro">&#9888; {{ erro }}</p>
-    {% endif %}
+    <!-- PAINEL ESQUERDO — branding -->
+    <div class="auth-left">
+        <div class="auth-left-dots"></div>
+        <div class="auth-left-body">
 
-    <form method="post">
-        {% csrf_token %}
-        <label for="username">Utilizador</label>
-        <input type="text" id="username" name="username" placeholder="O teu nome de utilizador" required autofocus>
+            <div class="auth-logo-row">
+                <div class="auth-logo-icon">LP</div>
+                <span class="auth-logo-label">Portfólio</span>
+            </div>
 
-        <label for="password">Palavra-passe</label>
-        <input type="password" id="password" name="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" required>
+            <div class="auth-left-center">
+                <h2 class="auth-left-headline">
+                    O teu percurso<br>
+                    <span>académico</span><br>
+                    num só lugar
+                </h2>
+                <p class="auth-left-desc">
+                    Projetos, tecnologias e formações reunidos numa plataforma profissional.
+                </p>
+                <div class="auth-features">
+                    <div class="auth-feature">
+                        <span class="auth-feature-dot"></span>
+                        Projetos académicos detalhados
+                    </div>
+                    <div class="auth-feature">
+                        <span class="auth-feature-dot"></span>
+                        Tecnologias e competências
+                    </div>
+                    <div class="auth-feature">
+                        <span class="auth-feature-dot"></span>
+                        Percurso e formações
+                    </div>
+                    <div class="auth-feature">
+                        <span class="auth-feature-dot"></span>
+                        Repositórios e TFCs
+                    </div>
+                </div>
+            </div>
 
-        <button type="submit" class="btn-full" style="margin-top:8px;">Entrar</button>
-    </form>
+            <div class="auth-left-foot">
+                &copy; 2026 Levi Pereira &middot; Universidade Lusófona
+            </div>
 
-    <div class="form-divider">ou</div>
-
-    <a href="{% url 'pedir_magic_link' %}" class="btn-full" style="background:#6366f1;">&#128279; Entrar com Link Mágico</a>
-
-    <div class="form-links">
-        <span>Ainda não tens conta? <a href="{% url 'registo' %}">Criar conta</a></span>
+        </div>
     </div>
+
+    <!-- PAINEL DIREITO — formulário -->
+    <div class="auth-right">
+        <div class="auth-box">
+
+            <h1 class="auth-box-title">Bem-vindo de volta</h1>
+            <p class="auth-box-sub">Inicia sessão para acederes ao portfólio.</p>
+
+            {% if erro %}
+            <div class="auth-box-erro">
+                <svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                </svg>
+                {{ erro }}
+            </div>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="auth-field">
+                    <label class="auth-field-label" for="email">Email</label>
+                    <div class="auth-field-wrap">
+                        <span class="auth-field-ico">
+                            <svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                            </svg>
+                        </span>
+                        <input type="email" id="email" name="email" placeholder="o.teu@email.com" required autofocus>
+                    </div>
+                </div>
+
+                <div class="auth-field">
+                    <label class="auth-field-label" for="password">Palavra-passe</label>
+                    <div class="auth-field-wrap">
+                        <span class="auth-field-ico">
+                            <svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                            </svg>
+                        </span>
+                        <input type="password" id="password" name="password" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="auth-submit-btn">Entrar</button>
+            </form>
+
+            <div class="auth-divider-row">ou</div>
+
+            <a href="{% url 'pedir_magic_link' %}" class="auth-magic">
+                <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"/>
+                </svg>
+                Entrar com Link Mágico
+            </a>
+
+            <p class="auth-bottom">
+                Ainda não tens conta? <a href="{% url 'registo' %}">Criar conta</a>
+            </p>
+
+        </div>
+    </div>
+
 </div>
-{% endblock %}
+</body>
+</html>

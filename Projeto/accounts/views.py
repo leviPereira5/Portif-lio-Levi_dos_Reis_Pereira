@@ -1,12 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User, Group
 from django.core.signing import TimestampSigner, BadSignature, SignatureExpired
 from django.core.mail import send_mail
 from django.urls import reverse
 from django.conf import settings
-from .forms import MagicLinkForm
+from .forms import MagicLinkForm, RegistoForm
 
 signer = TimestampSigner()
 
@@ -14,13 +13,17 @@ signer = TimestampSigner()
 def login_view(request):
     erro = None
     if request.method == "POST":
-        username = request.POST["username"]
+        email = request.POST["email"]
         password = request.POST["password"]
-        user = authenticate(request, username=username, password=password)
+        try:
+            username = User.objects.get(email=email).username
+        except User.DoesNotExist:
+            username = None
+        user = authenticate(request, username=username, password=password) if username else None
         if user is not None:
             login(request, user)
             return redirect("/")
-        erro = "Utilizador ou palavra-passe inválidos."
+        erro = "Email ou palavra-passe inválidos."
     return render(request, "accounts/login.html", {"erro": erro})
 
 
@@ -30,9 +33,11 @@ def logout_view(request):
 
 
 def registo_view(request):
-    form = UserCreationForm(request.POST or None)
+    form = RegistoForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
-        user = form.save()
+        user = form.save(commit=False)
+        user.email = form.cleaned_data['email']
+        user.save()
         grupo_autores, _ = Group.objects.get_or_create(name='autores')
         user.groups.add(grupo_autores)
         login(request, user)

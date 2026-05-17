@@ -1,31 +1,55 @@
-{% extends 'portfolio/base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Mágico · Portfólio</title>
+    <link rel="stylesheet" href="{% static 'portfolio/styles.css' %}">
+</head>
+<body class="landing-body">
 
-{% block content %}
-<div class="form-box">
-    <div class="form-icon">&#10024;</div>
-    <h2>Link Mágico</h2>
+    <div class="landing-bg">
+        <div class="landing-blob landing-blob-1"></div>
+        <div class="landing-blob landing-blob-2"></div>
+        <div class="landing-grid"></div>
+    </div>
 
-    {% if enviado %}
-        <p class="sucesso">
-            &#9989; Email enviado!<br>
-            Se o endereço estiver registado, receberás um link em breve.
-            Verifica a tua caixa de entrada (e o spam).
-        </p>
-        <div class="form-links">
-            <a href="{% url 'login' %}">&larr; Voltar ao login</a>
+    <nav class="landing-nav">
+        <a href="{% url 'home' %}" class="landing-brand" style="text-decoration:none;">
+            <span class="brand-dot"></span>
+            <span class="landing-brand-text">LP</span>
+        </a>
+        <div class="landing-nav-links">
+            <a href="{% url 'login' %}">← Voltar ao login</a>
         </div>
-    {% else %}
-        <p class="form-subtitle">Introduz o teu email e enviamos-te um link para entrares sem palavra-passe.</p>
+    </nav>
 
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn-full" style="margin-top:8px;">Enviar Link Mágico</button>
-        </form>
+    <div class="auth-page-center">
+        <div class="auth-card">
+            <div class="auth-card-icon">✨</div>
+            <h2 class="auth-card-title">Link Mágico</h2>
 
-        <div class="form-links">
-            <a href="{% url 'login' %}">&larr; Voltar ao login</a>
+            {% if enviado %}
+                <div class="auth-sucesso">
+                    ✅ Email enviado!<br>
+                    Se o endereço estiver registado, receberás um link em breve.<br>
+                    Verifica a tua caixa de entrada (e o spam).
+                </div>
+                <a href="{% url 'login' %}" class="auth-btn-submit" style="text-align:center;">← Voltar ao login</a>
+            {% else %}
+                <p class="auth-card-sub">Introduz o teu email e enviamos-te um link para entrares sem palavra-passe.</p>
+
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="auth-btn-submit">Enviar Link Mágico</button>
+                </form>
+
+                <p class="auth-footer-link"><a href="{% url 'login' %}">← Voltar ao login</a></p>
+            {% endif %}
         </div>
-    {% endif %}
-</div>
-{% endblock %}
+    </div>
+
+</body>
+</html>
