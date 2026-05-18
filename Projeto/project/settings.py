@@ -33,6 +33,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://levi-pereira-a22405441-pw.pw.deisi.ulusofona.pt',
+]
+
 
 # Application definition
 

@@ -79,6 +79,23 @@ body > header {
     letter-spacing: -0.2px;
 }
 
+/* hambúrguer — só aparece em mobile */
+.hamburger {
+    display: none;
+    color: #94A3B8;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: color 0.15s, background 0.15s;
+    user-select: none;
+}
+
+.hamburger:hover {
+    color: #F8FAFC;
+    background: #1E293B;
+}
+
 /* linha inferior: links de navegação */
 .header-nav {
     overflow-x: auto;
@@ -168,6 +185,35 @@ body > header {
     background: #1D4ED8;
     border-color: #1D4ED8;
     text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    .hamburger {
+        display: block;
+    }
+
+    .header-nav nav {
+        display: none;
+        flex-direction: column;
+        padding: 8px 16px 16px;
+        gap: 4px;
+        white-space: normal;
+    }
+
+    .header-nav nav.mostrar {
+        display: flex;
+    }
+
+    .header-nav nav a {
+        padding: 10px 14px;
+        border-radius: 8px;
+        border-bottom: none;
+    }
+
+    .header-nav nav a:hover {
+        background: #1E293B;
+        border-bottom-color: transparent;
+    }
 }
 
 /* ══════════════════════════════════════
@@ -2114,6 +2160,100 @@ textarea {
     color: #475569;
     margin: 4px 0 0;
     line-height: 1.6;
+}
+
+/* ══════════════════════════════════════
+   AVALIAÇÃO
+══════════════════════════════════════ */
+.avaliacao-section {
+    margin: 28px 0;
+    padding: 20px 0;
+    border-top: 1px solid #F1F5F9;
+    border-bottom: 1px solid #F1F5F9;
+}
+
+.avaliacao-section h3 {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #0F172A;
+}
+
+.avaliacao-media {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.avaliacao-numero {
+    font-size: 32px;
+    font-weight: 800;
+    color: #0F172A;
+    line-height: 1;
+}
+
+.avaliacao-estrelas {
+    font-size: 20px;
+    letter-spacing: 2px;
+}
+
+.avaliacao-total {
+    font-size: 13px;
+    color: #64748B;
+}
+
+.avaliacao-vazia {
+    font-size: 14px;
+    color: #94A3B8;
+    margin-bottom: 14px;
+}
+
+.avaliacao-ja {
+    font-size: 14px;
+    color: #16A34A;
+    font-weight: 500;
+}
+
+.avaliacao-form-box {
+    margin-top: 10px;
+}
+
+.avaliacao-form-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.estrelas-radio {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+}
+
+.estrela-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #64748B;
+    font-weight: 600;
+}
+
+.estrela-label input[type="radio"] {
+    accent-color: #2563EB;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    margin-bottom: 0;
+}
+
+.estrela-label span {
+    font-size: 22px;
 }
 
 /* ── BACK LINK ── */

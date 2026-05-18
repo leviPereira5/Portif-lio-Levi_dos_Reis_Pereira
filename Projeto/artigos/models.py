@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import Avg
 
 
 class Artigo(models.Model):
@@ -12,6 +13,10 @@ class Artigo(models.Model):
 
     def total_likes(self):
         return self.likes.count()
+
+    def media_avaliacao(self):
+        resultado = self.avaliacoes.aggregate(media=Avg('pontuacao'))
+        return resultado['media']
 
     def __str__(self):
         return self.titulo
@@ -28,9 +33,28 @@ class Like(models.Model):
 
 class Comentario(models.Model):
     artigo = models.ForeignKey(Artigo, on_delete=models.CASCADE, related_name='comentarios')
-    autor = models.ForeignKey(User, on_delete=models.CASCADE)
+    autor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    nome_autor = models.CharField(max_length=100, blank=True)
     texto = models.TextField()
     criado_em = models.DateTimeField(auto_now_add=True)
 
+    def get_nome(self):
+        if self.autor:
+            return self.autor.username
+        return self.nome_autor or 'Anónimo'
+
     def __str__(self):
-        return f"Comentário de {self.autor.username} em '{self.artigo}'"
+        return f"Comentário de {self.get_nome()} em '{self.artigo}'"
+
+
+class Avaliacao(models.Model):
+    PONTUACOES = [(i, str(i)) for i in range(1, 6)]
+
+    artigo = models.ForeignKey(Artigo, on_delete=models.CASCADE, related_name='avaliacoes')
+    pontuacao = models.IntegerField(choices=PONTUACOES)
+    utilizador = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    sessao = models.CharField(max_length=40, blank=True)
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Avaliação {self.pontuacao}/5 em '{self.artigo}'"

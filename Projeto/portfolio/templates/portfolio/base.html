@@ -17,6 +17,7 @@
             <span class="brand-dot"></span>
             <h1>Portfólio Académico</h1>
         </div>
+        <span class="hamburger">&#9776;</span>
 
         <div class="auth-nav">
             {% if request.user.is_authenticated %}
@@ -68,4 +69,13 @@
 </footer>
 
 </body>
+<script>
+  const menu = document.querySelector('.header-nav nav');
+  const botao = document.querySelector('.hamburger');
+  if (botao && menu) {
+    botao.addEventListener('click', () => {
+      menu.classList.toggle('mostrar');
+    });
+  }
+</script>
 </html>

@@ -8,4 +8,5 @@ urlpatterns = [
     path('<int:pk>/editar/', views.editar_artigo, name='editar_artigo'),
     path('<int:pk>/gostar/', views.gostar_artigo, name='gostar_artigo'),
     path('<int:pk>/comentar/', views.comentar_artigo, name='comentar_artigo'),
+    path('<int:pk>/avaliar/', views.avaliar_artigo, name='avaliar_artigo'),
 ]

@@ -38,8 +38,8 @@ def registo_view(request):
         user = form.save(commit=False)
         user.email = form.cleaned_data['email']
         user.save()
-        grupo_autores, _ = Group.objects.get_or_create(name='autores')
-        user.groups.add(grupo_autores)
+        grupo_bloggers, _ = Group.objects.get_or_create(name='bloggers')
+        user.groups.add(grupo_bloggers)
         login(request, user)
         return redirect("/")
     return render(request, "accounts/registro.html", {"form": form})

@@ -5,7 +5,7 @@
 
 {% if request.user.is_authenticated %}
     {% for g in request.user.groups.all %}
-        {% if g.name == 'autores' %}
+        {% if g.name == 'bloggers' %}
             <a href="{% url 'criar_artigo' %}" class="novo-btn">+ Novo Artigo</a>
         {% endif %}
     {% endfor %}

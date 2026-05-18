@@ -37,6 +37,44 @@
     <span class="likes-count">{{ artigo.total_likes }} gosto{{ artigo.total_likes|pluralize:"s" }}</span>
 </div>
 
+{# ── Avaliação ── #}
+<div class="avaliacao-section">
+    <h3>Avaliação</h3>
+    {% if media_avaliacao %}
+        <div class="avaliacao-media">
+            <span class="avaliacao-numero">{{ media_avaliacao|floatformat:1 }}</span>
+            <span class="avaliacao-estrelas">
+                {% for i in "12345" %}
+                    {% if forloop.counter <= media_avaliacao %}&#11088;{% else %}&#10025;{% endif %}
+                {% endfor %}
+            </span>
+            <span class="avaliacao-total">({{ total_avaliacoes }} avaliação{{ total_avaliacoes|pluralize:"ões" }})</span>
+        </div>
+    {% else %}
+        <p class="avaliacao-vazia">Ainda sem avaliações. Sê o primeiro!</p>
+    {% endif %}
+
+    {% if ja_avaliou %}
+        <p class="avaliacao-ja">Já avaliaste este artigo. Obrigado!</p>
+    {% else %}
+        <div class="avaliacao-form-box">
+            <p class="avaliacao-form-label">Dá a tua pontuação:</p>
+            <form method="post" action="{% url 'avaliar_artigo' artigo.pk %}" class="avaliacao-form">
+                {% csrf_token %}
+                <div class="estrelas-radio">
+                    {% for val, label in form_avaliacao.fields.pontuacao.choices %}
+                    <label class="estrela-label">
+                        <input type="radio" name="pontuacao" value="{{ val }}" required>
+                        <span>{{ val }}&#11088;</span>
+                    </label>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn" style="margin-top:10px;">Avaliar</button>
+            </form>
+        </div>
+    {% endif %}
+</div>
+
 {# ── Comentários ── #}
 <div class="comentarios-section">
     <h3>Comentários ({{ comentarios.count }})</h3>
@@ -44,7 +82,7 @@
     {% for comentario in comentarios %}
     <div class="comentario">
         <div class="comentario-header">
-            <span class="comentario-autor">{{ comentario.autor.username }}</span>
+            <span class="comentario-autor">{{ comentario.get_nome }}</span>
             <span class="comentario-data">{{ comentario.criado_em|date:"d/m/Y H:i" }}</span>
         </div>
         <p>{{ comentario.texto }}</p>
@@ -53,22 +91,23 @@
     <p style="color:#6b7280; font-size:14px;">Ainda sem comentários. Sê o primeiro!</p>
     {% endfor %}
 
-    {% if request.user.is_authenticated %}
     <div class="comentario-form-box">
         <h4>Deixar um comentário</h4>
         <form method="post" action="{% url 'comentar_artigo' artigo.pk %}">
             {% csrf_token %}
-            {{ form_comentario.as_p }}
-            <button type="submit">Comentar</button>
+            {% if not request.user.is_authenticated %}
+                <div style="margin-bottom:10px;">
+                    {{ form_comentario.nome_autor.label_tag }}
+                    {{ form_comentario.nome_autor }}
+                </div>
+            {% endif %}
+            <div>
+                {{ form_comentario.texto.label_tag }}
+                {{ form_comentario.texto }}
+            </div>
+            <button type="submit" style="margin-top:10px;">Comentar</button>
         </form>
     </div>
-    {% else %}
-    <div class="comentario-form-box">
-        <p style="font-size:14px; color:#6b7280;">
-            <a href="{% url 'login' %}">Inicia sessão</a> para deixar um comentário.
-        </p>
-    </div>
-    {% endif %}
 </div>
 
 <a href="{% url 'lista_artigos' %}" class="back-link">&larr; Voltar aos artigos</a>

@@ -1,21 +1,19 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-from .models import Artigo, Like, Comentario
-from .forms import ArtigoForm, ComentarioForm
+from .models import Artigo, Like, Comentario, Avaliacao
+from .forms import ArtigoForm, ComentarioForm, AvaliacaoForm
 
 
-def _e_autor(user):
-    return user.is_authenticated and user.groups.filter(name='autores').exists()
+def _e_blogger(user):
+    return user.is_authenticated and user.groups.filter(name='bloggers').exists()
 
 
-@login_required
 def lista_artigos(request):
     artigos = Artigo.objects.order_by('-criado_em')
     return render(request, 'artigos/lista.html', {'artigos': artigos})
 
 
-@login_required
 def detalhe_artigo(request, pk):
     artigo = get_object_or_404(Artigo, pk=pk)
     comentarios = artigo.comentarios.order_by('criado_em')
@@ -26,17 +24,27 @@ def detalhe_artigo(request, pk):
     elif request.session.session_key:
         ja_gostou = artigo.likes.filter(sessao=request.session.session_key).exists()
 
+    ja_avaliou = False
+    if request.user.is_authenticated:
+        ja_avaliou = artigo.avaliacoes.filter(utilizador=request.user).exists()
+    elif request.session.session_key:
+        ja_avaliou = artigo.avaliacoes.filter(sessao=request.session.session_key).exists()
+
     return render(request, 'artigos/detalhe.html', {
         'artigo': artigo,
         'comentarios': comentarios,
         'form_comentario': ComentarioForm(),
+        'form_avaliacao': AvaliacaoForm(),
         'ja_gostou': ja_gostou,
+        'ja_avaliou': ja_avaliou,
+        'media_avaliacao': artigo.media_avaliacao(),
+        'total_avaliacoes': artigo.avaliacoes.count(),
     })
 
 
 @login_required
 def criar_artigo(request):
-    if not _e_autor(request.user):
+    if not _e_blogger(request.user):
         return redirect('lista_artigos')
     form = ArtigoForm(request.POST or None, request.FILES or None)
     if request.method == 'POST' and form.is_valid():
@@ -50,7 +58,7 @@ def criar_artigo(request):
 @login_required
 def editar_artigo(request, pk):
     artigo = get_object_or_404(Artigo, pk=pk)
-    if not _e_autor(request.user) or artigo.autor != request.user:
+    if not _e_blogger(request.user) or artigo.autor != request.user:
         return redirect('lista_artigos')
     form = ArtigoForm(request.POST or None, request.FILES or None, instance=artigo)
     if request.method == 'POST' and form.is_valid():
@@ -80,7 +88,6 @@ def gostar_artigo(request, pk):
     return redirect('detalhe_artigo', pk=pk)
 
 
-@login_required
 @require_POST
 def comentar_artigo(request, pk):
     artigo = get_object_or_404(Artigo, pk=pk)
@@ -88,6 +95,36 @@ def comentar_artigo(request, pk):
     if form.is_valid():
         comentario = form.save(commit=False)
         comentario.artigo = artigo
-        comentario.autor = request.user
+        if request.user.is_authenticated:
+            comentario.autor = request.user
+            comentario.nome_autor = ''
+        else:
+            comentario.autor = None
+            comentario.nome_autor = form.cleaned_data.get('nome_autor') or 'Anónimo'
         comentario.save()
+    return redirect('detalhe_artigo', pk=pk)
+
+
+@require_POST
+def avaliar_artigo(request, pk):
+    artigo = get_object_or_404(Artigo, pk=pk)
+    form = AvaliacaoForm(request.POST)
+    if not form.is_valid():
+        return redirect('detalhe_artigo', pk=pk)
+
+    if request.user.is_authenticated:
+        if not artigo.avaliacoes.filter(utilizador=request.user).exists():
+            av = form.save(commit=False)
+            av.artigo = artigo
+            av.utilizador = request.user
+            av.save()
+    else:
+        if not request.session.session_key:
+            request.session.create()
+        sessao = request.session.session_key
+        if not artigo.avaliacoes.filter(sessao=sessao).exists():
+            av = form.save(commit=False)
+            av.artigo = artigo
+            av.sessao = sessao
+            av.save()
     return redirect('detalhe_artigo', pk=pk)
