@@ -3,258 +3,676 @@
 
 {% block content %}
 
-<div class="container mt-5">
-
-    <h1 class="mb-5 text-center">
-        Sobre Esta Aplicação
-    </h1>
-
-
-    <!-- MVT -->
-    <section class="mb-5">
-
-        <h2>1. Arquitetura MVT do Django</h2>
-
-        <img src="{% static 'portfolio/images/mvt.jpg' %}"
-             class="img-fluid rounded shadow my-4"
-             alt="Arquitetura MVT">
-
-        <p>
-            A aplicação foi desenvolvida utilizando a arquitetura
-            MVT (Model View Template) do Django.
-        </p>
-
-        <h4>Componentes</h4>
-
-        <ul>
-            <li><strong>Model:</strong> representa a base de dados</li>
-            <li><strong>View:</strong> processa pedidos</li>
-            <li><strong>Template:</strong> apresenta HTML</li>
-        </ul>
-
-        <h4>Fluxo de Informação</h4>
-
-        <ol>
-            <li>O utilizador acede à página</li>
-            <li>A URL chama uma View</li>
-            <li>A View consulta os Models</li>
-            <li>Os dados são enviados para o Template</li>
-            <li>O HTML é apresentado ao utilizador</li>
-        </ol>
+<h2>Sobre Esta Aplicação</h2>
+<p style="color:#64748B; margin-bottom:40px;">
+    Síntese técnica da aplicação: modelação, arquitetura, tecnologias, infraestrutura e pipeline de entrega.
+</p>
 
 
-        <!-- VIDEO -->
-        <div class="ratio ratio-16x9 mt-4">
+<!-- 1. MODELAÇÃO NO PAPEL -->
+<section style="margin-bottom:48px;">
 
-            <iframe
-                src="https://www.youtube.com/embed/ID_DO_VIDEO"
-                title="Vídeo Tutorial"
-                allowfullscreen>
-            </iframe>
+    <h2>1. Modelação no Papel</h2>
+    <p style="color:#64748B; margin-bottom:24px;">
+        Antes de escrever qualquer linha de código, a aplicação foi modelada no papel.
+        As imagens mostram a progressão desde a identificação das entidades até ao diagrama
+        completo de relações.
+    </p>
 
+    <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:20px;">
+        <figure style="flex:1; min-width:280px; margin:0;">
+            <img src="{% static 'portfolio/images/modeling5.jpeg' %}"
+                 style="width:100%; border-radius:10px; box-shadow:0 2px 12px rgba(15,23,42,.1);"
+                 alt="Entidades possíveis da app Portfolio">
+            <figcaption style="font-size:13px; color:#64748B; margin-top:8px;">
+                <strong>31-03-2026</strong> — Identificação das entidades da app Portfolio:
+                Licenciatura, Projetos, Tecnologias, UCs, TFCs, Formações, Skills, Perfil,
+                Repositório e Docente. Detalhe de Licenciatura e Unidades Curriculares.
+            </figcaption>
+        </figure>
+        <figure style="flex:1; min-width:280px; margin:0;">
+            <img src="{% static 'portfolio/images/modeling6.jpeg' %}"
+                 style="width:100%; border-radius:10px; box-shadow:0 2px 12px rgba(15,23,42,.1);"
+                 alt="Diagrama ER no papel">
+            <figcaption style="font-size:13px; color:#64748B; margin-top:8px;">
+                <strong>Diagrama ER</strong> — Relações entre todas as entidades:
+                Utilizador, MakingOf, Repositório, Projeto, Tecnologia, TFC, Área,
+                PalavraChave, Licenciatura, Competência, UC, Formação e Docente.
+            </figcaption>
+        </figure>
+    </div>
+
+    <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:20px;">
+        <figure style="flex:1; min-width:280px; margin:0;">
+            <img src="{% static 'portfolio/images/modeling3.jpeg' %}"
+                 style="width:100%; border-radius:10px; box-shadow:0 2px 12px rgba(15,23,42,.1);"
+                 alt="Tecnologias, TFC e Competências">
+            <figcaption style="font-size:13px; color:#64748B; margin-top:8px;">
+                <strong>31-03-2026</strong> — Tecnologias (nome, tipo, logo, website, nível
+                de preferência), TFC (título, descrição, ano, classificação, pdf, imagem)
+                e Competências (nome, tipo, nível, descrição).
+            </figcaption>
+        </figure>
+        <figure style="flex:1; min-width:280px; margin:0;">
+            <img src="{% static 'portfolio/images/modeling4.jpeg' %}"
+                 style="width:100%; border-radius:10px; box-shadow:0 2px 12px rgba(15,23,42,.1);"
+                 alt="Docente, Projetos e Repositório">
+            <figcaption style="font-size:13px; color:#64748B; margin-top:8px;">
+                <strong>31-03-2026</strong> — Docente (nome, email, página pessoal),
+                Projetos (título, descrição, imagem, vídeo demo, conceitos aplicados)
+                e Repositório (nome, url, visibilidade, descrição, data de criação).
+            </figcaption>
+        </figure>
+    </div>
+
+    <div style="display:flex; gap:20px; flex-wrap:wrap;">
+        <figure style="flex:1; min-width:280px; margin:0;">
+            <img src="{% static 'portfolio/images/modeling1.jpeg' %}"
+                 style="width:100%; border-radius:10px; box-shadow:0 2px 12px rgba(15,23,42,.1);"
+                 alt="Area, Palavra-Chave e Utilizador">
+            <figcaption style="font-size:13px; color:#64748B; margin-top:8px;">
+                <strong>04-04-2026</strong> — Área e Palavra-Chave como entidades separadas
+                do TFC para reutilização em vários TFCs. Utilizador com nome, email, foto,
+                bio, linkedin e github.
+            </figcaption>
+        </figure>
+        <figure style="flex:1; min-width:280px; margin:0;">
+            <img src="{% static 'portfolio/images/modeling2.jpeg' %}"
+                 style="width:100%; border-radius:10px; box-shadow:0 2px 12px rgba(15,23,42,.1);"
+                 alt="Formações e Making Of">
+            <figcaption style="font-size:13px; color:#64748B; margin-top:8px;">
+                <strong>Formações e Making Of</strong> — Formações com título, instituição,
+                datas, certificado e descrição. Making Of com descrição, data, imagem,
+                decisões, erros, correções e uso de IA.
+            </figcaption>
+        </figure>
+    </div>
+
+</section>
+
+
+<!-- 2. ARQUITETURA MVT -->
+<section style="margin-bottom:48px;">
+
+    <h2>2. Arquitetura MVT do Django</h2>
+    <p style="color:#64748B; margin-bottom:20px;">
+        A aplicação segue a arquitetura MVT (Model-View-Template) do Django,
+        onde cada camada tem uma responsabilidade bem definida.
+    </p>
+
+    <div style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:16px;">
+
+        <article style="flex:1; min-width:200px;">
+            <header>
+                <h3>Model</h3>
+                <p>Camada de dados</p>
+            </header>
+            <section>
+                <h4>Responsabilidade</h4>
+                <ul>
+                    <li>Define as tabelas da base de dados</li>
+                    <li>Valida e persiste dados</li>
+                    <li>Gere relações entre entidades</li>
+                </ul>
+            </section>
+        </article>
+
+        <article style="flex:1; min-width:200px;">
+            <header>
+                <h3>View</h3>
+                <p>Camada de lógica</p>
+            </header>
+            <section>
+                <h4>Responsabilidade</h4>
+                <ul>
+                    <li>Recebe e processa pedidos HTTP</li>
+                    <li>Consulta os Models</li>
+                    <li>Passa dados para os Templates</li>
+                </ul>
+            </section>
+        </article>
+
+        <article style="flex:1; min-width:200px;">
+            <header>
+                <h3>Template</h3>
+                <p>Camada de apresentação</p>
+            </header>
+            <section>
+                <h4>Responsabilidade</h4>
+                <ul>
+                    <li>Gera HTML com os dados da View</li>
+                    <li>Usa a linguagem de templates Django</li>
+                    <li>Herança via <code>base.html</code></li>
+                </ul>
+            </section>
+        </article>
+
+    </div>
+
+    <article>
+        <header>
+            <h3>Fluxo de um Pedido</h3>
+            <p>O que acontece quando o utilizador acede a uma página</p>
+        </header>
+        <section>
+            <h4>Passos</h4>
+            <ul>
+                <li>Utilizador acede a um URL no browser</li>
+                <li>Django faz match com uma entrada em <code>urls.py</code></li>
+                <li>A View correspondente é chamada</li>
+                <li>A View consulta os Models (base de dados Neon)</li>
+                <li>Os dados são passados ao Template</li>
+                <li>O HTML renderizado é devolvido ao browser</li>
+            </ul>
+        </section>
+    </article>
+
+</section>
+
+
+<!-- 3. APPS DJANGO -->
+<section style="margin-bottom:48px;">
+
+    <h2>3. Apps Django</h2>
+    <p style="color:#64748B; margin-bottom:20px;">
+        A aplicação está organizada em 4 apps Django, cada uma com responsabilidades distintas.
+    </p>
+
+    <div style="display:flex; gap:16px; flex-wrap:wrap;">
+
+        <article style="flex:1; min-width:220px;">
+            <header>
+                <h3>portfolio</h3>
+                <p>App principal do portfólio</p>
+            </header>
+            <section>
+                <h4>Modelos</h4>
+                <ul>
+                    <li>Utilizador</li>
+                    <li>Licenciatura</li>
+                    <li>UC · Docente</li>
+                    <li>TipoTecnologia · Tecnologia</li>
+                    <li>Projeto · Competência · Formação</li>
+                    <li>Repositório</li>
+                    <li>TFC · Área · PalavraChave</li>
+                    <li>MakingOf</li>
+                </ul>
+            </section>
+        </article>
+
+        <article style="flex:1; min-width:220px;">
+            <header>
+                <h3>artigos</h3>
+                <p>Blog e interação</p>
+            </header>
+            <section>
+                <h4>Modelos</h4>
+                <ul>
+                    <li>Artigo (título, texto, foto, link)</li>
+                    <li>Like (por utilizador ou sessão)</li>
+                    <li>Comentario (autor, texto, data)</li>
+                    <li>Avaliacao (pontuação 1-5)</li>
+                </ul>
+            </section>
+        </article>
+
+        <article style="flex:1; min-width:220px;">
+            <header>
+                <h3>accounts</h3>
+                <p>Autenticação e utilizadores</p>
+            </header>
+            <section>
+                <h4>Funcionalidades</h4>
+                <ul>
+                    <li>Registo de utilizadores</li>
+                    <li>Login com password</li>
+                    <li>Magic link por email</li>
+                    <li>Grupos de permissões</li>
+                </ul>
+            </section>
+        </article>
+
+        <article style="flex:1; min-width:220px;">
+            <header>
+                <h3>escola</h3>
+                <p>App auxiliar de exercício</p>
+            </header>
+            <section>
+                <h4>Modelos</h4>
+                <ul>
+                    <li>Professor</li>
+                    <li>Aluno</li>
+                    <li>Curso</li>
+                </ul>
+            </section>
+        </article>
+
+    </div>
+
+</section>
+
+
+<!-- 4. ESTRUTURA DO SITE -->
+<section style="margin-bottom:48px;">
+
+    <h2>4. Estrutura do Site</h2>
+    <p style="color:#64748B; margin-bottom:20px;">
+        Mapa de todas as páginas e URLs disponíveis na aplicação.
+    </p>
+
+    <div style="display:flex; gap:16px; flex-wrap:wrap;">
+
+        <article style="flex:1; min-width:240px;">
+            <header>
+                <h3>Páginas Públicas</h3>
+                <p>Acessíveis sem autenticação</p>
+            </header>
+            <section>
+                <h4>URLs</h4>
+                <ul>
+                    <li><code>/</code> — Landing page</li>
+                    <li><code>/accounts/login/</code> — Login</li>
+                    <li><code>/accounts/registo/</code> — Registo</li>
+                    <li><code>/accounts/magic-link/</code> — Magic link</li>
+                </ul>
+            </section>
+        </article>
+
+        <article style="flex:1; min-width:240px;">
+            <header>
+                <h3>Páginas Protegidas</h3>
+                <p>Requerem autenticação (<code>@login_required</code>)</p>
+            </header>
+            <section>
+                <h4>URLs</h4>
+                <ul>
+                    <li><code>/projetos/</code> — Projetos</li>
+                    <li><code>/tecnologias/</code> — Tecnologias</li>
+                    <li><code>/ucs/</code> — Unidades Curriculares</li>
+                    <li><code>/docentes/</code> — Docentes</li>
+                    <li><code>/tfcs/</code> — TFCs</li>
+                    <li><code>/licenciaturas/</code> — Licenciaturas</li>
+                    <li><code>/formacoes/</code> — Formações</li>
+                    <li><code>/competencias/</code> — Competências</li>
+                    <li><code>/repositorios/</code> — Repositórios</li>
+                    <li><code>/makingof/</code> — Making Of</li>
+                    <li><code>/sobre/</code> — Sobre (esta página)</li>
+                    <li><code>/utilizadores/</code> — Perfis</li>
+                    <li><code>/artigos/</code> — Artigos</li>
+                </ul>
+            </section>
+        </article>
+
+        <article style="flex:1; min-width:240px;">
+            <header>
+                <h3>CRUD — Gestor</h3>
+                <p>Apenas para utilizadores do grupo <code>gestor-portfolio</code></p>
+            </header>
+            <section>
+                <h4>Operações</h4>
+                <ul>
+                    <li>Criar / Editar / Apagar Projetos</li>
+                    <li>Criar / Editar / Apagar Tecnologias</li>
+                    <li>Criar / Editar / Apagar Competências</li>
+                    <li>Criar / Editar / Apagar Formações</li>
+                </ul>
+            </section>
+        </article>
+
+    </div>
+
+</section>
+
+
+<!-- 5. TECNOLOGIAS -->
+<section style="margin-bottom:48px;">
+
+    <h2>5. Tecnologias Usadas</h2>
+    <p style="color:#64748B; margin-bottom:20px;">
+        Tecnologias utilizadas para construir esta aplicação.
+    </p>
+
+    <div style="display:flex; gap:16px; flex-wrap:wrap;">
+
+        <article style="flex:1; min-width:220px;">
+            <header>
+                <h3>Python</h3>
+                <p>Linguagem de programação</p>
+            </header>
+            <section>
+                <h4>Utilização</h4>
+                <ul>
+                    <li>Linguagem principal do projeto</li>
+                    <li><a href="https://www.python.org" target="_blank">python.org</a></li>
+                </ul>
+            </section>
+        </article>
+
+        <article style="flex:1; min-width:220px;">
+            <header>
+                <h3>Django 6.0.4</h3>
+                <p>Framework web</p>
+            </header>
+            <section>
+                <h4>Utilização</h4>
+                <ul>
+                    <li>Framework principal (MVT, ORM, Admin)</li>
+                    <li><a href="https://www.djangoproject.com" target="_blank">djangoproject.com</a></li>
+                </ul>
+            </section>
+        </article>
+
+        <article style="flex:1; min-width:220px;">
+            <header>
+                <h3>PostgreSQL / Neon</h3>
+                <p>Base de dados</p>
+            </header>
+            <section>
+                <h4>Utilização</h4>
+                <ul>
+                    <li>Base de dados relacional serverless na cloud</li>
+                    <li>Ligação via <code>dj-database-url</code></li>
+                    <li><a href="https://neon.tech" target="_blank">neon.tech</a></li>
+                </ul>
+            </section>
+        </article>
+
+        <article style="flex:1; min-width:220px;">
+            <header>
+                <h3>Cloudinary</h3>
+                <p>Armazenamento de media</p>
+            </header>
+            <section>
+                <h4>Utilização</h4>
+                <ul>
+                    <li>Upload e entrega de imagens via CDN</li>
+                    <li>Integrado com <code>django-cloudinary-storage</code></li>
+                    <li><a href="https://cloudinary.com" target="_blank">cloudinary.com</a></li>
+                </ul>
+            </section>
+        </article>
+
+        <article style="flex:1; min-width:220px;">
+            <header>
+                <h3>Whitenoise</h3>
+                <p>Ficheiros estáticos</p>
+            </header>
+            <section>
+                <h4>Utilização</h4>
+                <ul>
+                    <li>Serve CSS e JS diretamente pelo Django</li>
+                    <li>Compressão automática em produção</li>
+                    <li><a href="https://whitenoise.readthedocs.io" target="_blank">whitenoise.readthedocs.io</a></li>
+                </ul>
+            </section>
+        </article>
+
+        <article style="flex:1; min-width:220px;">
+            <header>
+                <h3>HTML + CSS</h3>
+                <p>Frontend</p>
+            </header>
+            <section>
+                <h4>Utilização</h4>
+                <ul>
+                    <li>Templates Django com HTML semântico</li>
+                    <li>CSS personalizado (sem frameworks externos)</li>
+                </ul>
+            </section>
+        </article>
+
+        <article style="flex:1; min-width:220px;">
+            <header>
+                <h3>Git + GitHub</h3>
+                <p>Controlo de versões</p>
+            </header>
+            <section>
+                <h4>Utilização</h4>
+                <ul>
+                    <li>Histórico de commits e desenvolvimento</li>
+                    <li>Integração com CI/CD via GitHub Actions</li>
+                    <li><a href="https://github.com" target="_blank">github.com</a></li>
+                </ul>
+            </section>
+        </article>
+
+        <article style="flex:1; min-width:220px;">
+            <header>
+                <h3>django-markdownify</h3>
+                <p>Renderização de Markdown</p>
+            </header>
+            <section>
+                <h4>Utilização</h4>
+                <ul>
+                    <li>Converte texto Markdown em HTML nos artigos</li>
+                    <li><a href="https://django-markdownify.readthedocs.io" target="_blank">Documentação</a></li>
+                </ul>
+            </section>
+        </article>
+
+    </div>
+
+</section>
+
+
+<!-- 6. REPOSITÓRIO GITHUB -->
+<section style="margin-bottom:48px;">
+
+    <h2>6. Repositório GitHub</h2>
+
+    <article>
+        <header>
+            <h3>leviPereira5 / Portif-lio-Levi_dos_Reis_Pereira</h3>
+            <p>Controlo de versões e histórico de desenvolvimento</p>
+        </header>
+        <section>
+            <h4>Utilização</h4>
+            <ul>
+                <li>Controlo de versões com Git</li>
+                <li>Histórico de commits e decisões de desenvolvimento</li>
+                <li>Backup do código em cloud</li>
+                <li>Integração com o pipeline CI/CD</li>
+            </ul>
+        </section>
+        <div style="margin-top:16px;">
+            <a href="https://github.com/leviPereira5/Portif-lio-Levi_dos_Reis_Pereira"
+               target="_blank"
+               class="btn">Ver Repositório no GitHub</a>
         </div>
-
-    </section>
-
-
-
-    <!-- MODELACAO -->
-    <section class="mb-5">
-
-        <h2>2. Modelação</h2>
-
-        <img src="{% static 'portfolio/images/diagrama.jpg' %}"
-             class="img-fluid rounded shadow my-4"
-             alt="Diagrama ER">
-
-        <p>
-            A aplicação foi modelada utilizando várias entidades
-            relacionadas entre si.
-        </p>
-
-        <h4>Entidades Principais</h4>
-
-        <ul>
-            <li>Utilizador</li>
-            <li>Projeto</li>
-            <li>Tecnologia</li>
-            <li>UC</li>
-            <li>Repositorio</li>
-            <li>TFC</li>
-            <li>MakingOf</li>
-        </ul>
-
-    </section>
-
-
-
-    <!-- TECNOLOGIAS -->
-    <section class="mb-5">
-
-        <h2>3. Tecnologias</h2>
-
-        <div class="row">
-
-            {% for tecnologia in tecnologias %}
-
-            <div class="col-md-4 mb-4">
-
-                <div class="card h-100 shadow-sm">
-
-                    {% if tecnologia.logo %}
-
-                    <img src="{{ tecnologia.logo.url }}"
-                         class="card-img-top p-3"
-                         style="height: 200px; object-fit: contain;">
-
-                    {% endif %}
-
-                    <div class="card-body">
-
-                        <h5 class="card-title">
-                            {{ tecnologia.nome }}
-                        </h5>
-
-                        <p>
-                            <strong>Tipo:</strong>
-                            {{ tecnologia.tipo }}
-                        </p>
-
-                        <p>
-                            {{ tecnologia.descricao }}
-                        </p>
-
-                        <a href="{{ tecnologia.website_url }}"
-                           target="_blank"
-                           class="btn btn-dark">
-
-                            Website
-
-                        </a>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            {% endfor %}
-
-        </div>
-
-    </section>
-
-
-
-    <!-- ESTRUTURA -->
-    <section class="mb-5">
-
-        <h2>4. Estrutura das Páginas</h2>
-
-        <img src="{% static 'portfolio/images/mapa.jpg' %}"
-             class="img-fluid rounded shadow my-4"
-             alt="Mapa Navegação">
-
-        <pre>
-Home
-│
-├── Sobre
-├── Projetos
-├── Tecnologias
-├── UC
-├── Repositórios
-├── Making Of
-└── Contactos
-        </pre>
-
-    </section>
-
-
-
-    <!-- GITHUB -->
-    <section class="mb-5">
-
-        <h2>5. Repositório GitHub</h2>
-
-        <a href="https://github.com/TEU_USER/TEU_REPO"
-           target="_blank"
-           class="btn btn-dark">
-
-            Ver Repositório
-
-        </a>
-
-        <p class="mt-3">
-            O GitHub foi utilizado para controlo de versões,
-            backup do projeto e organização do desenvolvimento.
-        </p>
-
-    </section>
-
-
-
-    <!-- MAKING OF -->
-    <section class="mb-5">
-
-        <h2>6. Making-Of</h2>
-
-        <div class="row">
-
-            {% for item in makingof %}
-
-            <div class="col-md-6 mb-4">
-
-                <div class="card shadow-sm h-100">
-
-                    {% if item.imagem %}
-
-                    <img src="{{ item.imagem.url }}"
-                         class="card-img-top">
-
-                    {% endif %}
-
-                    <div class="card-body">
-
-                        <h5>
-                            {{ item.data }}
-                        </h5>
-
-                        <p>
-                            {{ item.descricao }}
-                        </p>
-
-                        <p>
-                            <strong>Decisões:</strong>
-                            {{ item.decisoes }}
-                        </p>
-
-                        <p>
-                            <strong>Erros:</strong>
-                            {{ item.erros }}
-                        </p>
-
-                        <p>
-                            <strong>Correções:</strong>
-                            {{ item.correcoes }}
-                        </p>
-
-                        <p>
-                            <strong>Uso IA:</strong>
-                            {{ item.uso_ia }}
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            {% endfor %}
-
-        </div>
-
-    </section>
-
-</div>
+    </article>
+
+</section>
+
+
+<!-- 7. ARQUITETURA EM PRODUÇÃO -->
+<section style="margin-bottom:48px;">
+
+    <h2>7. Arquitetura em Produção</h2>
+    <p style="color:#64748B; margin-bottom:20px;">
+        A aplicação está alojada em ambiente universitário e usa serviços cloud para
+        a base de dados e para os ficheiros media.
+    </p>
+
+    <div style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:16px;">
+
+        <article style="flex:1; min-width:220px;">
+            <header>
+                <h3>Neon</h3>
+                <p>Base de dados PostgreSQL serverless</p>
+            </header>
+            <section>
+                <h4>Como é usado</h4>
+                <ul>
+                    <li>PostgreSQL na cloud, sem servidor dedicado</li>
+                    <li>Ligação via variável <code>DATABASE_URL</code> no <code>.env</code></li>
+                    <li>Integrado com <code>dj-database-url</code> no <code>settings.py</code></li>
+                    <li>Suporta branches de base de dados para desenvolvimento</li>
+                </ul>
+            </section>
+        </article>
+
+        <article style="flex:1; min-width:220px;">
+            <header>
+                <h3>Cloudinary</h3>
+                <p>Armazenamento de ficheiros media</p>
+            </header>
+            <section>
+                <h4>Como é usado</h4>
+                <ul>
+                    <li>Fotos de tecnologias, projetos, TFCs e utilizadores</li>
+                    <li>Armazenamento persistente entre deploys</li>
+                    <li>Integrado via <code>django-cloudinary-storage</code></li>
+                    <li>CDN automático para servir imagens rapidamente</li>
+                </ul>
+            </section>
+        </article>
+
+        <article style="flex:1; min-width:220px;">
+            <header>
+                <h3>Whitenoise</h3>
+                <p>Ficheiros estáticos (CSS, JS)</p>
+            </header>
+            <section>
+                <h4>Como é usado</h4>
+                <ul>
+                    <li>Serve CSS e JS diretamente pelo Django</li>
+                    <li>Compressão automática dos ficheiros</li>
+                    <li>Configurado como middleware no <code>settings.py</code></li>
+                    <li>Sem necessidade de servidor externo (Nginx/Apache)</li>
+                </ul>
+            </section>
+        </article>
+
+    </div>
+
+    <article>
+        <header>
+            <h3>Fluxo de Dados em Produção</h3>
+            <p>Como os diferentes serviços comunicam entre si</p>
+        </header>
+        <section>
+            <h4>Componentes</h4>
+            <ul>
+                <li>Browser → Servidor WSGI (Gunicorn) → Django</li>
+                <li>Django ↔ Neon (leituras e escritas na base de dados)</li>
+                <li>Django ↔ Cloudinary (upload e leitura de ficheiros media)</li>
+                <li>Django → Whitenoise (ficheiros estáticos CSS/JS)</li>
+                <li>Credenciais isoladas em variáveis de ambiente (<code>.env</code>)</li>
+            </ul>
+        </section>
+    </article>
+
+</section>
+
+
+<!-- 8. CI/CD -->
+<section style="margin-bottom:48px;">
+
+    <h2>8. Pipeline CI/CD</h2>
+    <p style="color:#64748B; margin-bottom:20px;">
+        Automatização do processo de integração e entrega contínua via GitHub Actions.
+        O pipeline é ativado a cada <code>push</code> para o ramo <code>main</code>.
+    </p>
+
+    <div style="display:flex; gap:16px; flex-wrap:wrap;">
+
+        <article style="flex:1; min-width:220px;">
+            <header>
+                <h3>CI — Integração Contínua</h3>
+                <p>Verificação automática do código</p>
+            </header>
+            <section>
+                <h4>Passos</h4>
+                <ul>
+                    <li>Checkout do código do repositório</li>
+                    <li>Instalar dependências (<code>pip install -r requirements.txt</code>)</li>
+                    <li>Correr testes (<code>python manage.py test</code>)</li>
+                    <li>Verificar migrações não aplicadas</li>
+                </ul>
+            </section>
+        </article>
+
+        <article style="flex:1; min-width:220px;">
+            <header>
+                <h3>CD — Entrega Contínua</h3>
+                <p>Deploy automático após CI passar</p>
+            </header>
+            <section>
+                <h4>Passos</h4>
+                <ul>
+                    <li>Recolher ficheiros estáticos (<code>collectstatic</code>)</li>
+                    <li>Aplicar migrações (<code>migrate</code>)</li>
+                    <li>Deploy no servidor universitário</li>
+                </ul>
+            </section>
+        </article>
+
+        <article style="flex:1; min-width:220px;">
+            <header>
+                <h3>Segredos e Variáveis</h3>
+                <p>Credenciais protegidas no GitHub</p>
+            </header>
+            <section>
+                <h4>Secrets</h4>
+                <ul>
+                    <li><code>DATABASE_URL</code> — Ligação ao Neon</li>
+                    <li><code>CLOUDINARY_CLOUD_NAME</code></li>
+                    <li><code>CLOUDINARY_API_KEY</code></li>
+                    <li><code>CLOUDINARY_API_SECRET</code></li>
+                    <li><code>SECRET_KEY</code> — Chave Django</li>
+                </ul>
+            </section>
+        </article>
+
+    </div>
+
+</section>
+
+
+<!-- 9. MAKING OF -->
+<section style="margin-bottom:48px;">
+
+    <h2>9. Making Of</h2>
+    <p style="color:#64748B; margin-bottom:20px;">
+        Registo do processo de desenvolvimento: decisões tomadas, erros encontrados
+        e correções aplicadas ao longo do tempo.
+    </p>
+
+    <div style="display:flex; gap:16px; flex-wrap:wrap;">
+
+        {% for item in makingofs %}
+        <article style="flex:0 0 calc(50% - 8px); min-width:280px;">
+            {% if item.imagem %}
+            <img src="{{ item.imagem.url }}"
+                 style="width:100%; height:200px; object-fit:cover; border-radius:8px; margin-bottom:14px; display:block;">
+            {% endif %}
+            <header>
+                <h3>{{ item.data }}</h3>
+                <p>{{ item.descricao }}</p>
+            </header>
+            <section>
+                <h4>Decisões</h4>
+                <ul><li>{{ item.decisoes }}</li></ul>
+            </section>
+            <section>
+                <h4>Erros</h4>
+                <ul><li>{{ item.erros }}</li></ul>
+            </section>
+            <section>
+                <h4>Correções</h4>
+                <ul><li>{{ item.correcoes }}</li></ul>
+            </section>
+            <section>
+                <h4>Uso de IA</h4>
+                <ul><li>{{ item.uso_ia }}</li></ul>
+            </section>
+        </article>
+        {% empty %}
+        <p style="color:#64748B;">Sem registos de making of.</p>
+        {% endfor %}
+
+    </div>
+
+</section>
 
 {% endblock %}

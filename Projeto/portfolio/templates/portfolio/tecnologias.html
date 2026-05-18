@@ -1,40 +1,61 @@
 {% extends "portfolio/base.html" %}
 {% block content %}
-<h2>Tecnologias</h2>
-<a href="{% url 'criar_tecnologia' %}"><button type="button">+ Nova Tecnologia</button></a>
-<section>
+
+<div class="tech-page-header">
+    <h2>Tecnologias</h2>
+    <p>Ferramentas e linguagens que fazem parte do meu percurso académico</p>
+</div>
+
+{% if gestor %}
+<div style="text-align:right; margin-bottom:24px;">
+    <a href="{% url 'criar_tecnologia' %}" class="btn">+ Nova Tecnologia</a>
+</div>
+{% endif %}
+
+<div class="tech-grid">
     {% for tecnologia in tecnologias %}
-    <article>
-        <header>
-            <h3>{{ tecnologia.nome }}</h3>
-            <p>{{ tecnologia.tipo }}</p>
-        </header>
-        <section>
-            <h4>Descrição</h4>
-            <p>{{ tecnologia.descricao }}</p>
-        </section>
-        <section>
-            <h4>Detalhes</h4>
-            <ul>
-                <li>Nível de preferência: {{ tecnologia.nivel_preferencia }}</li>
-                {% if tecnologia.website_url %}
-                    <li><a href="{{ tecnologia.website_url }}" target="_blank">Website</a></li>
-                {% endif %}
-            </ul>
-        </section>
-        <section>
-            <h4>Ações</h4>
-            <div style="display: flex; gap: 8px; margin-top: 8px;">
-                <a href="{% url 'editar_tecnologia' tecnologia.id %}"><button type="button">Editar</button></a>
-                <form method="post" action="{% url 'apagar_tecnologia' tecnologia.id %}">
-                    {% csrf_token %}
-                    <button type="submit">Apagar</button>
-                </form>
+    <div class="tech-card">
+
+        {% if tecnologia.logo %}
+            <img src="{{ tecnologia.logo.url }}"
+                 class="tech-card-logo"
+                 alt="{{ tecnologia.nome }}">
+        {% else %}
+            <div class="tech-card-fallback">
+                {{ tecnologia.nome|slice:":2"|upper }}
             </div>
-        </section>
-    </article>
+        {% endif %}
+
+        <p class="tech-card-name">{{ tecnologia.nome }}</p>
+        <span class="tech-card-type">{{ tecnologia.tipo }}</span>
+        <p class="tech-card-desc">{{ tecnologia.descricao }}</p>
+
+        <div class="tech-card-footer">
+            {% if tecnologia.website_url %}
+            <a href="{{ tecnologia.website_url }}"
+               target="_blank"
+               class="tech-card-link">Website</a>
+            {% endif %}
+        </div>
+
+        {% if gestor %}
+        <div class="tech-card-actions">
+            <a href="{% url 'editar_tecnologia' tecnologia.id %}">
+                <button type="button">Editar</button>
+            </a>
+            <form method="post" action="{% url 'apagar_tecnologia' tecnologia.id %}">
+                {% csrf_token %}
+                <button type="submit">Apagar</button>
+            </form>
+        </div>
+        {% endif %}
+
+    </div>
     {% empty %}
-        <p>Sem tecnologias.</p>
+    <p style="color:#94A3B8; grid-column: 1/-1; text-align:center; padding: 40px 0;">
+        Sem tecnologias registadas.
+    </p>
     {% endfor %}
-</section>
+</div>
+
 {% endblock %}

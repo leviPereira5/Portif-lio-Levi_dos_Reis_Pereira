@@ -14,8 +14,8 @@
     <!-- Linha superior: marca + auth -->
     <div class="header-brand">
         <div class="brand-logo">
-            <span class="brand-dot"></span>
-            <h1>Portfólio Académico</h1>
+            <div class="brand-icon">LP</div>
+            <h1>Levi Pereira</h1>
         </div>
         <span class="hamburger">&#9776;</span>
 
@@ -41,19 +41,19 @@
     <!-- Linha inferior: navegação -->
     <div class="header-nav">
         <nav>
-            <a href="{% url 'projetos_view' %}">Projetos</a>
-            <a href="{% url 'tecnologias_view' %}">Tecnologias</a>
-            <a href="{% url 'ucs_view' %}">UCs</a>
-            <a href="{% url 'docentes_view' %}">Docentes</a>
-            <a href="{% url 'tfcs_view' %}">TFCs</a>
-            <a href="{% url 'licenciaturas_view' %}">Licenciaturas</a>
-            <a href="{% url 'formacoes_view' %}">Formações</a>
-            <a href="{% url 'competencias_view' %}">Competências</a>
-            <a href="{% url 'repositorios_view' %}">Repositórios</a>
-            <a href="{% url 'makingof_view' %}">Making Of</a>
-            <a href="{% url 'sobre_view' %}">Sobre</a>
-            <a href="{% url 'utilizadores_view' %}">Perfil</a>
-            <a href="{% url 'lista_artigos' %}">Artigos</a>
+            <a href="{% url 'projetos_view' %}" {% if request.resolver_match.url_name == 'projetos_view' %}class="nav-active"{% endif %}>Projetos</a>
+            <a href="{% url 'tecnologias_view' %}" {% if request.resolver_match.url_name == 'tecnologias_view' %}class="nav-active"{% endif %}>Tecnologias</a>
+            <a href="{% url 'ucs_view' %}" {% if request.resolver_match.url_name == 'ucs_view' %}class="nav-active"{% endif %}>UCs</a>
+            <a href="{% url 'docentes_view' %}" {% if request.resolver_match.url_name == 'docentes_view' %}class="nav-active"{% endif %}>Docentes</a>
+            <a href="{% url 'tfcs_view' %}" {% if request.resolver_match.url_name == 'tfcs_view' %}class="nav-active"{% endif %}>TFCs</a>
+            <a href="{% url 'licenciaturas_view' %}" {% if request.resolver_match.url_name == 'licenciaturas_view' %}class="nav-active"{% endif %}>Licenciaturas</a>
+            <a href="{% url 'formacoes_view' %}" {% if request.resolver_match.url_name == 'formacoes_view' %}class="nav-active"{% endif %}>Formações</a>
+            <a href="{% url 'competencias_view' %}" {% if request.resolver_match.url_name == 'competencias_view' %}class="nav-active"{% endif %}>Competências</a>
+            <a href="{% url 'repositorios_view' %}" {% if request.resolver_match.url_name == 'repositorios_view' %}class="nav-active"{% endif %}>Repositórios</a>
+            <a href="{% url 'makingof_view' %}" {% if request.resolver_match.url_name == 'makingof_view' %}class="nav-active"{% endif %}>Making Of</a>
+            <a href="{% url 'sobre_view' %}" {% if request.resolver_match.url_name == 'sobre_view' %}class="nav-active"{% endif %}>Sobre</a>
+            <a href="{% url 'utilizadores_view' %}" {% if request.resolver_match.url_name == 'utilizadores_view' %}class="nav-active"{% endif %}>Perfil</a>
+            <a href="{% url 'lista_artigos' %}" {% if request.resolver_match.url_name == 'lista_artigos' %}class="nav-active"{% endif %}>Artigos</a>
         </nav>
     </div>
 
